@@ -1,5 +1,8 @@
 <script setup lang="ts">
-  const message = defineModel('message', {default: "Hello world"})
+  const message = defineModel('message', { default: "Hello world" })
+const limpar = () => {
+  message.value = '';
+  }
 </script>
 
 <template>
@@ -9,6 +12,7 @@
           Dizendo olá, para variar: {{ message }}
       </div>
       <input v-model="message" type="text">
+      <button @click="limpar">Limpar</button>
     </div>
 </template>
 
