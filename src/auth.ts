@@ -1,27 +1,86 @@
+import { storage } from './storage'
+import Swal from 'sweetalert2'
+
+const URL = import.meta.env.VITE_BASE_URL
+console.log(URL)
+
 type user = {
-    email: string,
-    password: string
+  email: string
+  password: string
 }
-async function signIn(email: user['email'], password: user['password'], onSuccess: any) {
-    console.log("will sign in...")
-    const body = {
-        login: {
-            email: email,
-            password: password
-        }
+
+async function signIn(
+  email: user['email'],
+  password: user['password'],
+  onSuccess: any,
+  onFailure: any
+) {
+  const body = {
+    login: {
+      email: email,
+      password: password
     }
-    const response = await fetch(
- "http://localhost:3000/sign_in", {
-    method: "POST",
-        headers: {
-        "Accept": "application/json",
-            "Content-Type": "application/json"
+  }
+  console.log(URL)
+  fetch(`${URL}/sign_in`, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify(body)
-})
-    response.json().then((json) => console.log(json)).then(() => onSuccess)
+  }).then((response) => {
+    if (response.ok) {
+      success(response, onSuccess)
+    } else {
+      console.log(response)
+      failure(response, onFailure)
+    }
+  })
+}
+
+function success(response, onSuccess: (() => void)) {
+  response.json().then((json) => {
+    storage.store('token', json.token)
+    storage.store('email', json.email)
+    onSuccess()
+  })
+}
+
+function failure(response: (() => void), onFailure: (() => void)) {
+  onFailure()
+  Swal.fire({
+    title: `${response.status}`,
+    text: `${response.statusText}`,
+    icon: 'error',
+    confirmButtonText: 'Cool'
+  })
+}
+
+function loggedIn() {
+  return Boolean(storage.get('token'))
+}
+
+function signOut(andThen: (() => void) | null | undefined = null) {
+  storage.remove('token')
+  storage.remove('email')
+  if (typeof andThen == 'function') {
+      andThen()
+  }
+}
+
+function currentUser() {
+  if (!loggedIn()) {
+    return null
+  }
+  return {
+    email: storage.get('email')
+  }
 }
 
 export const auth = {
-    signIn: signIn
+  signIn,
+  loggedIn,
+  currentUser,
+  signOut
 }

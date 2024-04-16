@@ -1,49 +1,33 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
-import { ref } from 'vue';
+import { useRouter } from 'vue-router'
+import { ref } from 'vue'
 import { auth } from '../auth'
+const router = useRouter();
+const email = defineModel('email');
+const password = defineModel('password');
+const awaiting = ref(false);
 
-const router = useRouter()
-const email = defineModel('email')
-const password = defineModel('password')
-const awaiting = ref(false)
-
-function onSubmit(form: any) {
-    console.log(form)
+function onSubmit() {
     awaiting.value = true
-    auth.signIn(
-        email.value as string,
-        password.value as string,
-        () => {
-        awaiting.value = false;
+    auth.signIn(email.value, password.value, () => {
+        awaiting.value = false
         router.push('/')
+    }, () => {
+        awaiting.value = false
+        console.log('não foi dessa vez!')
     })
 }
-
 </script>
-
 <template>
     <div>
-        <h1>Sign in</h1>
+        <h1>Sign In</h1>
         <form @submit.prevent="onSubmit">
-            <div>
-                <label>Email:</label>
-                <input type="email" v-model="email">
-            </div>
-             <div>
-                 <label>Password:</label>
-                 <input type="password" v-model="password">
-             </div>
-
-            <button type="submit" v-show="!awaiting">Sign in</button>
+            <label>E-Mail: </label>
+            <input v-model="email" type="email"><br />
+            <label>Senha: </label>
+            <input v-model="password" type="password"><br />
+            <button type="submit" v-show="!awaiting">
+                Sign In</button>
         </form>
     </div>
 </template>
-
-<style scoped>
-div {
-    display: flex;
-    flex-direction: column;
-}
-
-</style>
