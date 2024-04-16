@@ -21,7 +21,7 @@ const signOut = function () {
       <h3>Please log in to have access</h3>
       <br />
       <nav>
-        <RouterLink :to="{name: ‘signin'}"> Sign In </RouterLink>
+        <RouterLink :to="{name: 'signin'}"> Sign In </RouterLink>
       </nav>
     </template>
   </main>
