@@ -12,8 +12,8 @@ type user = {
 async function signIn(
   email: user['email'],
   password: user['password'],
-  onSuccess: () => {},
-  onFailure: () => {}
+  onSuccess: () => void,
+  onFailure: () => void
 ) {
   const body = {
     login: {
