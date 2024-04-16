@@ -12,8 +12,8 @@ type user = {
 async function signIn(
   email: user['email'],
   password: user['password'],
-  onSuccess: any,
-  onFailure: any
+  onSuccess: () => {},
+  onFailure: () => {}
 ) {
   const body = {
     login: {
@@ -21,7 +21,6 @@ async function signIn(
       password: password
     }
   }
-  console.log(URL)
   fetch(`${URL}/sign_in`, {
     method: 'POST',
     headers: {
@@ -33,13 +32,12 @@ async function signIn(
     if (response.ok) {
       success(response, onSuccess)
     } else {
-      console.log(response)
       failure(response, onFailure)
     }
   })
 }
 
-function success(response, onSuccess: (() => void)) {
+function success(response: Response, onSuccess: (() => void)) {
   response.json().then((json) => {
     storage.store('token', json.token)
     storage.store('email', json.email)
@@ -47,7 +45,7 @@ function success(response, onSuccess: (() => void)) {
   })
 }
 
-function failure(response: (() => void), onFailure: (() => void)) {
+function failure(response: Response, onFailure: (() => void)) {
   onFailure()
   Swal.fire({
     title: `${response.status}`,
@@ -61,12 +59,10 @@ function isLoggedIn() {
   return Boolean(storage.get('token'))
 }
 
-function signOut(andThen: (() => void) | null | undefined = null) {
+function signOut(andThen = () => {} ) {
   storage.remove('token')
   storage.remove('email')
-  if (typeof andThen == 'function') {
-      andThen()
-  }
+  andThen()
 }
 
 function currentUser() {
