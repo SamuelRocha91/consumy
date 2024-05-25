@@ -20,7 +20,7 @@ const signOut = function () {
       </nav>
     </template>
     <template v-else>
-      <h3>Please log in to have access</h3>
+      <h3>Por favor, faça login para ter acesso</h3>
       <br />
       <nav>
         <RouterLink :to="{name: 'signIn'}"> Sign In </RouterLink>
