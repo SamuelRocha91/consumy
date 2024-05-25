@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { auth } from '../auth'
-import { ref } from 'vue'
-const isLoggedIn = ref(auth.isLoggedIn())
-const currentUser = ref(auth.currentUser())
+import { Auth } from '../auth';
+import { ref } from 'vue';
+
+const auth = new Auth();
+const isLoggedIn = ref(auth.isLoggedIn());
+const currentUser = ref(auth.currentUser());
 const signOut = function () {
   auth.signOut(() => (isLoggedIn.value = auth.isLoggedIn()))
 }
@@ -21,7 +23,7 @@ const signOut = function () {
       <h3>Please log in to have access</h3>
       <br />
       <nav>
-        <RouterLink :to="{name: 'signin'}"> Sign In </RouterLink>
+        <RouterLink :to="{name: 'signIn'}"> Sign In </RouterLink>
       </nav>
     </template>
   </main>
