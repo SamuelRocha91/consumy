@@ -39,3 +39,13 @@ h3 {
   }
 }
 </style>
+// funcional x OO
+mais declarativo / mais imperativo
+não manipula estado / manipula
+recursividade / loops
+hofs / métodos descritivos para cada ação
+
+
+abstração - abstrair conceitos complexos em pedaços mais simples e reutilizǘeis
+reutilizar código
+encapsulamento
