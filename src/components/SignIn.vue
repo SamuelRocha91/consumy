@@ -17,7 +17,7 @@ function onSubmit() {
     password.value || '',
     () => {
       awaiting.value = false
-      router.push('/')
+      router.push('/dashboard')
     },
     () => {
       awaiting.value = false

@@ -1,25 +1,8 @@
 <script setup lang="ts">
-import { Auth } from '../auth';
-import { ref } from 'vue';
-
-const auth = new Auth();
-const isLoggedIn = ref(auth.isLoggedIn());
-const currentUser = ref(auth.currentUser());
-const signOut = function () {
-  auth.signOut(() => (isLoggedIn.value = auth.isLoggedIn()))
-}
 </script>
 
 <template>
   <main>
-    <template v-if="isLoggedIn">
-      <h3>Hi, {{ currentUser && currentUser.email }}</h3>
-      <br />
-      <nav>
-        <a @click="signOut">Sign Out</a>
-      </nav>
-    </template>
-    <template v-else>
       <nav>
         <RouterLink :to="{name: 'signIn'}">Login</RouterLink>
         <RouterLink :to="{name: 'signUp'}">Registro</RouterLink>
@@ -27,7 +10,6 @@ const signOut = function () {
       <section class="food-text">
           <h3>Comida boa e gostozinha, quem preparou foi a vovozinha</h3>
       </section>
-    </template>
   </main>
 </template>
 
