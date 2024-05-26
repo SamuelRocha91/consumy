@@ -45,8 +45,8 @@ h3 {
   align-content: flex-start;
   text-align: center;
   border: 1px solid white;
-    background-color: black;
-
+  background-color: black;
+  font-family: monospace;
 }
 
 nav {
