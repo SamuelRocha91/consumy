@@ -22,7 +22,7 @@ const signOut = function () {
     <template v-else>
       <nav>
         <RouterLink :to="{name: 'signIn'}">Login</RouterLink>
-        <RouterLink :to="{name: 'signIn'}">Registro</RouterLink>
+        <RouterLink :to="{name: 'signUp'}">Registro</RouterLink>
       </nav>
       <section class="food-text">
           <h3>Comida boa e gostozinha, quem preparou foi a vovozinha</h3>
