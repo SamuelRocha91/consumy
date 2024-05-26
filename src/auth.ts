@@ -1,11 +1,11 @@
 import { createStorage, type SimpleStorage } from './storage'
 import Swal from 'sweetalert2'
 
-const URL = import.meta.env.VITE_BASE_URL
-
-
 class Auth {
   private storage: SimpleStorage
+  static URL = import.meta.env.VITE_BASE_URL;
+  static X_API_KEY = import.meta.env.VITE_X_API_KEY;
+
   constructor(persistent = false) {
     this.storage = createStorage(persistent)
   }
@@ -15,6 +15,7 @@ class Auth {
     const persistent = createStorage(true)
     return transient.get(key) || persistent.get(key)
   }
+
   success(response: Response, onSuccess: () => void) {
     response.json().then((json) => {
       this.storage.store('token', json.token)
@@ -32,6 +33,7 @@ class Auth {
       confirmButtonText: 'Cool'
     })
   }
+
   currentUser() {
     if (!this.isLoggedIn()) {
       return null
@@ -40,9 +42,11 @@ class Auth {
       email: this.getFallback('email')
     }
   }
+
   isLoggedIn() {
     return Boolean(this.getFallback('token'))
   }
+
   signOut(andThen = () => { }) {
     const transient = createStorage(false)
     const persistent = createStorage(true)
@@ -60,11 +64,12 @@ class Auth {
         password: password
       }
     }
-    fetch(`${URL}/sign_in`, {
+    fetch(`${Auth.URL}/sign_in`, {
       method: "POST",
       headers: {
         "Accept": "application/json",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        'X-API-KEY': Auth.X_API_KEY
       },
       body: JSON.stringify(body)
     }).then((response) => {
@@ -75,5 +80,37 @@ class Auth {
       }
     })
   }
+
+  async signUp(
+    email: string,
+    password: string,
+    password_confirmation: string,
+    onSuccess: () => void,
+    onFailure: () => void
+  ) {
+    const body = {
+      user: {
+        email: email,
+        password: password,
+        password_confirmation: password_confirmation,
+      }
+    };
+    await fetch(`${Auth.URL}/new`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-API-KEY': Auth.X_API_KEY
+      },
+      body: JSON.stringify(body)
+    }).then((response) => {
+      if (response.ok) {
+        this.success(response, onSuccess);
+      } else {
+        this.failure(response, onFailure);
+      }
+    });
+  }
+  
 }
 export { Auth }

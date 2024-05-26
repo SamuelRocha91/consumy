@@ -67,22 +67,22 @@ const validatepasswordConfirmationOnBlur = () => {
     : (passwordConfirmationError.value = 'Senhas não coincidem');
 };
 
-function onSubmit() {
-  let auth = new Auth(remember.value)
-  awaiting.value = true
-  auth.signIn(
+const onSubmit = () => {
+  const auth = new Auth(remember.value);
+  awaiting.value = true;
+  auth.signUp(
     email.value || '',
     password.value || '',
+    password_confirmation.value || '',
     () => {
-      awaiting.value = false
-      router.push('/')
+      awaiting.value = false;
+      router.push('/signIn')
     },
     () => {
-      awaiting.value = false
-      console.log('não foi dessa vez!')
-    }
-  )
-}
+      awaiting.value = false;
+    });
+};
+
 </script>
 <template>
   <div class="form-content">
