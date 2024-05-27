@@ -1,13 +1,15 @@
  <script setup lang="ts">
+import { useRouter } from 'vue-router';
 import { Auth } from '../auth';
 import { ref } from 'vue';
 
 const auth = new Auth();
 const isLoggedIn = ref(auth.isLoggedIn());
-
+const route = useRouter();
 const currentUser = ref(auth.currentUser());
 const signOut = function () {
   auth.signOut(() => (isLoggedIn.value = auth.isLoggedIn()))
+  route.push('/')
 }
 </script>
 <template>
@@ -26,7 +28,7 @@ const signOut = function () {
             <a class="nav-link" href="/dashboard/profile">Perfil</a>
           </li>
         <nav>
-          <a class="btn btn-outline-info text-info my-2 my-sm-0 p-2" @click="signOut">Sign Out</a>
+          <a class="btn btn-outline-info text-info my-2 my-sm-0 p-2" @click.prevent="signOut">Sign Out</a>
         </nav>
     </nav>
 </template>
