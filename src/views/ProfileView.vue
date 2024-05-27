@@ -10,7 +10,6 @@ const isEdit = ref(true);
   <NavBar />
   <FormProfile v-if="isEdit" />
   <ProfileData v-else/>
-
 </template>
 
 <style scoped>
