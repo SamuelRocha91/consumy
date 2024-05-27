@@ -1,4 +1,29 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue';
+
+const email = defineModel<string>('email', { default: '' })
+const cep = ref('');
+const name = ref('');
+const state = ref('');
+const city = ref('');
+const address = ref('');
+const neighborhood = ref('');
+const numberAddress = ref('');
+
+onMounted(() => {
+    const user = localStorage.getItem('buyer') || '';
+    const parseUser = user ? JSON.parse(user) : '';
+    if (parseUser) {
+        email.value = parseUser.email;
+        name.value = parseUser.name
+        cep.value = parseUser.cep
+        state.value = parseUser.state
+        city.value = parseUser.city
+        address.value = parseUser.address
+        neighborhood.value = parseUser.neighborhood
+        numberAddress.value = parseUser.numberAddress
+    }
+})
 </script>
 <template>
     <div class="container mt-5">

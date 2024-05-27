@@ -4,7 +4,7 @@ import NavBar from '@/components/NavBar.vue';
 import ProfileData from '@/components/ProfileData.vue';
 import FormProfile from '@/components/FormProfile.vue';
 
-const isEdit = ref(true);
+const isEdit = ref(false);
 </script>
 <template>
   <NavBar />

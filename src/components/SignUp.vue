@@ -104,14 +104,14 @@ const onSubmit = () => {
     return
   }
   const buyer = {
-    name,
-    email,
-    address,
-    city,
-    state,
-    neighborhood,
-    numberAddress,
-    cep,
+    name: name.value,
+    email: email.value,
+    address: address.value,
+    city: city.value,
+    state: state.value,
+    neighborhood: neighborhood.value,
+    numberAddress: numberAddress.value,
+    cep: cep.value,
   }
   localStorage.setItem('buyer', JSON.stringify(buyer))
   const auth = new Auth(remember.value);
