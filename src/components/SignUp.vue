@@ -2,6 +2,7 @@
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { Auth } from '../auth'
+import Swal from 'sweetalert2';
 
 const router = useRouter();
 
@@ -81,7 +82,38 @@ const validatepasswordConfirmationOnBlur = () => {
     : (passwordConfirmationError.value = 'Senhas não coincidem');
 };
 
+const validateFields = () => {
+
+  return passwordConfirmationError.value ||
+    passwordError.value ||
+    nameError.value ||
+    cepError.value ||
+    !cep.value ||
+    !numberAddress.value ||
+    emailError.value
+
+}
+
 const onSubmit = () => {
+  if (validateFields()) {
+    Swal.fire({
+      title: `Preencha todos os campos corretamente`,
+      icon: 'error',
+      confirmButtonText: 'Ok'
+    });
+    return
+  }
+  const buyer = {
+    name,
+    email,
+    address,
+    city,
+    state,
+    neighborhood,
+    numberAddress,
+    cep,
+  }
+  localStorage.setItem('buyer', JSON.stringify(buyer))
   const auth = new Auth(remember.value);
   awaiting.value = true;
   auth.signUp(
@@ -99,12 +131,14 @@ const onSubmit = () => {
 
 </script>
 <template>
-  <div class="form-content">
-    <div class="card-content  d-flex align-items-center">
-      <h1>Sign Up</h1>
-      <div class="card-body d-flex align-items-center w-100">
-        <form @submit.prevent="onSubmit">
-          <div class="input-group d-flex align-items-center justify-content-center w-100">
+  <div class="form-container">
+    <div class="container mt-5 d-flex justify-content-center">
+      <div class="card">
+        <div class="card-header text-center">
+          <h1>Sign Up</h1>
+        </div>
+        <div class="card-body">
+          <form @submit.prevent="onSubmit">
             <div class="form-group">
               <label for="name">Name</label>
               <input @blur="handleName" type="text" class="form-control" id="name" :value="name">
@@ -112,39 +146,46 @@ const onSubmit = () => {
                 <span v-if="nameError" class="error">{{ nameError }}</span>
               </div>
             </div>
-            <div class="form-group d-flex ml-4 ">
-              <input @blur="validateCepOnBlur" @input="handleCep" type="text" class="form-control ml-3" id="cep"
-                placeholder="Digite o CEP" :value="cep">
-              <div class="input-group-append">
-                <span @click.prevent="searchCep" class="input-group-text" id="cep-search"><i
-                    class="fa fa-search"></i></span>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="cep">CEP</label>
+                <div class="input-group">
+                  <input @blur="validateCepOnBlur" @input="handleCep" type="text" class="form-control" id="cep" placeholder="Digite o CEP" :value="cep">
+                  <div class="input-group-append">
+                    <button @click.prevent="searchCep" class="btn btn-outline-secondary" id="cep-search">
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="div-error">
+                  <span v-if="cepError" class="error">{{ cepError }}</span>
+                </div>
               </div>
-              <div class="div-error">
-                <span v-if="cepError" class="error">{{ cepError }}</span>
-              </div>
-            </div>
-            <div class="form-group d-flex">
-              <label for="city">Cidade
+              <div class="form-group col-md-6">
+                <label for="city">Cidade</label>
                 <input type="text" class="form-control" id="city" :value="city" readonly>
-              </label>
-              <label for="state">Estado
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="state">Estado</label>
                 <input type="text" class="form-control" id="state" :value="state" readonly>
-              </label>
-            </div>
-            <div class="form-group">
-              <label for="address">Endereço
+              </div>
+              <div class="form-group col-md-6">
+                <label for="address">Endereço</label>
                 <input type="text" class="form-control" id="address" :value="address" readonly>
-              </label>
+              </div>
             </div>
-            <div class="form-group  d-flex">
-              <label for="address">Bairro
-                <input type="text" class="form-control" id="address" :value="neighborhood" readonly>
-              </label>
-              <label for="address">Número
-                <input type="text" class="form-control" id="address" :value="numberAddress">
-              </label>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="neighborhood">Bairro</label>
+                <input type="text" class="form-control" id="neighborhood" :value="neighborhood" readonly>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="numberAddress">Número</label>
+                <input type="text" class="form-control" id="numberAddress" :value="numberAddress">
+              </div>
             </div>
-
             <div class="form-group">
               <label for="email">Email</label>
               <input @blur="validateEmailOnBlur" type="email" class="form-control" id="email" :value="email">
@@ -153,36 +194,42 @@ const onSubmit = () => {
               </div>
             </div>
             <div class="form-group">
-              <label for="email">Senha</label>
-              <input @blur="validatepasswordOnBlur" type="password" class="form-control" id="email" :value="password">
+              <label for="password">Senha</label>
+              <input @blur="validatepasswordOnBlur" type="password" class="form-control" id="password" :value="password">
             </div>
             <div class="form-group">
-              <label for="email">Repetir a senha</label>
-              <input @blur="validatepasswordConfirmationOnBlur" type="password" class="form-control" id="email"
-                :value="password_confirmation">
+              <label for="password_confirmation">Repetir a senha</label>
+              <input @blur="validatepasswordConfirmationOnBlur" type="password" class="form-control" id="password_confirmation" :value="password_confirmation">
               <div class="div-error">
-                <span v-if="passwordConfirmationError" class="error">{{
-          passwordConfirmationError
-        }}</span>
+                <span v-if="passwordConfirmationError" class="error">{{ passwordConfirmationError }}</span>
               </div>
             </div>
-            <div>
-              <label>Remember Me: </label>
-              <input v-model="remember" type="checkbox" />
+            <div class="form-group form-check">
+              <input v-model="remember" type="checkbox" class="form-check-input" id="remember">
+              <label class="form-check-label" for="remember">Remember Me</label>
             </div>
+            <button type="submit" class="btn btn-primary btn-block" v-show="!awaiting">Registrar</button>
+          </form>
+          <div class="text-center mt-3">
+            <p>
+              Já possui cadastro?
+              <RouterLink class="router" to="/signIn">
+                Fazer login
+              </RouterLink>
+            </p>
           </div>
-          <button type="submit" v-show="!awaiting">Registrar</button>
-        </form>
+        </div>
       </div>
     </div>
   </div>
 </template>
+
 <style scoped>
-.form-content {
+.form-container{
   background-image: url('../assets/pizza.jpg');
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   justify-content: center;
   align-items: center;
@@ -212,22 +259,25 @@ form {
   opacity: 0.8;
 }
 
+.links-redirect {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 12px;
+  gap: 20px;
+}
+
 .label-register {
   height: 89px;
   padding: 10px;
 }
 
 .div-error {
-  height: 10px;
-  display: flex;
-  align-items: center;
-  color: #ff1818;
-
+  height:0.700em;
 }
-
 .error {
-  color: #ff1818;
-  font-size: x-small;
-  transition: max-height 0.2s ease;
+  display: block;
+  font-size: 0.875em; 
+  color: red;
 }
 </style>
