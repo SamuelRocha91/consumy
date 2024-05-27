@@ -33,9 +33,6 @@ onMounted(() => {
         </div>
         <div class="card-body">
             <form>
-                <div class="form-group text-center">
-                    <img src="" alt="Profile Image" class="img-thumbnail" style="width: 150px; height: 150px;">
-                </div>
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input type="text" class="form-control" id="name" :value="name" readonly>
@@ -57,8 +54,16 @@ onMounted(() => {
                     <input type="text" class="form-control" id="address" :value="address" readonly>
                 </div>
                 <div class="form-group">
+                    <label for="name">numberAddress</label>
+                    <input type="text" class="form-control" id="name" :value="numberAddress" readonly>
+                </div>
+                <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" class="form-control" id="email" :value="email" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="email">neighborhood</label>
+                    <input type="email" class="form-control" id="email" :value="neighborhood" readonly>
                 </div>
                 <div class="form-group text-center">
                     <button type="button" class="btn btn-primary mr-2">Alterar Dados</button>

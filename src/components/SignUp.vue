@@ -7,8 +7,8 @@ import Swal from 'sweetalert2';
 const router = useRouter();
 
 const email = defineModel<string>('email', { default: '' })
-const password = defineModel<string>('password', { default: '' })
-const password_confirmation = defineModel<string>('password_confirmation');
+const password = ref('')
+const password_confirmation =  ref('')
 const cep = ref('');
 const name = ref('');
 const state = ref('');
@@ -44,6 +44,11 @@ const handleCep = (event: Event) => {
   cep.value = cepMask(value || '');
 };
 
+const handleNumberAddress = (event: Event) => {
+  const value = (event.target as HTMLInputElement).value;
+  numberAddress.value = value;
+};
+
 const searchCep = () => {
   const formatedCep = cep.value.replace('-', '')
   fetch(`https://viacep.com.br/ws/${formatedCep}/json/`).then((data) => data.json().then((json) => {
@@ -70,6 +75,21 @@ const handleName = (event: Event) => {
     : (nameError.value = 'Insira um nome válido');
 };
 
+const handleEmail = (event: Event) => {
+  const value = (event.target as HTMLInputElement).value;
+  email.value = value;
+};
+
+const handlePassword = (event: Event) => {
+  const value = (event.target as HTMLInputElement).value;
+  password.value = value;
+};
+
+const handlePasswordConfirmation = (event: Event) => {
+  const value = (event.target as HTMLInputElement).value;
+  password_confirmation.value = value;
+};
+
 const validatepasswordOnBlur = () => {
   password.value.length < 6
     ? (passwordError.value = 'Mínimo de 6 caracteres')
@@ -84,13 +104,13 @@ const validatepasswordConfirmationOnBlur = () => {
 
 const validateFields = () => {
 
-  return passwordConfirmationError.value ||
-    passwordError.value ||
-    nameError.value ||
-    cepError.value ||
+  return passwordConfirmationError.value.length > 0 ||
+    passwordError.value.length > 0  ||
+    nameError.value.length > 0  ||
+    cepError.value.length > 0  ||
     !cep.value ||
     !numberAddress.value ||
-    emailError.value
+    emailError.value.length > 0 
 
 }
 
@@ -140,7 +160,7 @@ const onSubmit = () => {
         <div class="card-body">
           <form @submit.prevent="onSubmit">
             <div class="form-group">
-              <label for="name">Name</label>
+              <label for="name">Nome</label>
               <input @blur="handleName" type="text" class="form-control" id="name" :value="name">
               <div class="div-error">
                 <span v-if="nameError" class="error">{{ nameError }}</span>
@@ -183,23 +203,23 @@ const onSubmit = () => {
               </div>
               <div class="form-group col-md-6">
                 <label for="numberAddress">Número</label>
-                <input type="text" class="form-control" id="numberAddress" :value="numberAddress">
+                <input @change="handleNumberAddress" type="text" class="form-control" id="numberAddress" :value="numberAddress">
               </div>
             </div>
             <div class="form-group">
               <label for="email">Email</label>
-              <input @blur="validateEmailOnBlur" type="email" class="form-control" id="email" :value="email">
+              <input @input="handleEmail" @blur="validateEmailOnBlur" type="email" class="form-control" id="email" :value="email">
               <div class="div-error">
                 <span v-if="emailError" class="error">{{ emailError }}</span>
               </div>
             </div>
             <div class="form-group">
               <label for="password">Senha</label>
-              <input @blur="validatepasswordOnBlur" type="password" class="form-control" id="password" :value="password">
+              <input @blur="validatepasswordOnBlur" @change="handlePassword" type="password" class="form-control" id="password" :value="password">
             </div>
             <div class="form-group">
               <label for="password_confirmation">Repetir a senha</label>
-              <input @blur="validatepasswordConfirmationOnBlur" type="password" class="form-control" id="password_confirmation" :value="password_confirmation">
+              <input @input="handlePasswordConfirmation" @blur="validatepasswordConfirmationOnBlur"  type="password" class="form-control" id="password_confirmation" :value="password_confirmation">
               <div class="div-error">
                 <span v-if="passwordConfirmationError" class="error">{{ passwordConfirmationError }}</span>
               </div>
