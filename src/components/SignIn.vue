@@ -39,8 +39,16 @@ function onSubmit() {
           <label>Remember Me: </label>
           <input v-model="remember" type="checkbox" /><br />
         </div>
-        <button type="submit" v-show="!awaiting">Sign In</button>
+        <button type="submit" class="btn btn-primary btn-block" v-show="!awaiting">Sign In</button>
       </form>
+        <div class="text-center mt-3">
+            <p>
+              Não possui cadastro?
+              <RouterLink class="router" to="/signUp">
+                Faça o registro
+              </RouterLink>
+            </p>
+          </div>
     </div>
   </div>
 </template>
@@ -73,7 +81,6 @@ form {
 }
 
 .card-content {
-  border:  1px solid black;
   padding: 20px;
   box-shadow: 1px 3px 2px black;
   background-color: white;
