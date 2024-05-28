@@ -110,6 +110,10 @@ const saveData = () => {
     handleClick()
 }
 
+const updatePassword = () => {
+  handleClick()
+}
+
 const searchCep = () => {
     const formatedCep = cep.value.replace('-', '')
     fetch(`https://viacep.com.br/ws/${formatedCep}/json/`).then((data) => data.json().then((json) => {
@@ -215,10 +219,9 @@ onMounted(() => {
                     </div>
                 </div>
                    <div class="form-group text-center">
-                    <button @click.prevent="handleClick()" type="button" class="btn btn-primary mr-2">Alterar
-                        Dados</button>
-                    <button @click.prevent="handleClick('password')" type="button" class="btn btn-secondary">Alterar
-                        Senha</button>
+                   <button type="button" class="btn btn-success mr-2" @click.prevent="updatePassword">Salvar
+                                nova senha</button>
+                    <button @click.prevent="handleClick()" type="button" class="btn btn-danger">Cancelar</button>
                 </div>
             </form>
         </div>
