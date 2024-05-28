@@ -1,16 +1,18 @@
 import { BaseService } from './abstractService';
 
 class ProductService extends BaseService{
+
   constructor() {
     super();
   }
   
   async getProducts(
     id: number,  
-    onSuccess: () => void,
-    onFailure: () => void
+    onSuccess: (data?: any) => void,
+    onFailure: () => void,
+    page: number
   ) {
-    const response = await this.getAll(`stores/${id}/products`);
+    const response = await this.getAll(`stores/${id}/products?page=${page}`);
     if (response.ok) {
       this.success(response, onSuccess, id);
     } else {
@@ -75,14 +77,13 @@ class ProductService extends BaseService{
 
   success(
     response: Response,
-    onSuccess: () => void,
+    onSuccess: (data?: any) => void,
     id: number,
     type = "generate"
   ) {
     if (type == "generate") {
       response.json().then((json) => {
-        this.generateStorage(json, id);
-        onSuccess();
+        onSuccess(json);
       });
     } else if (type == "update") {
       response.json().then(async (json) => {
