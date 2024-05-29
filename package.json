@@ -12,9 +12,10 @@
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write src/",
-     "type": "vue-tsc --build --force --watch"
+    "type": "vue-tsc --build --force --watch"
   },
   "dependencies": {
+    "lodash": "^4.17.21",
     "sweetalert2": "^11.10.7",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5"
@@ -24,6 +25,7 @@
     "@tsconfig/node20": "^20.1.2",
     "@types/dotenv-webpack": "^7.0.7",
     "@types/jsdom": "^21.1.6",
+    "@types/lodash": "^4.17.4",
     "@types/node": "^20.11.10",
     "@vitejs/plugin-vue": "^5.0.3",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
