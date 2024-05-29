@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import NavBar from '@/components/NavBar.vue';
 import ProfileData from '@/components/ProfileData.vue';
 import FormProfile from '@/components/FormProfile.vue';
@@ -15,9 +15,18 @@ const managerPages = (param = 'update') => {
   }
 }
 const isEdit = ref(false);
+
+const quantity = ref(0);
+onMounted(() => {
+    const products = localStorage.getItem('cart') || '';
+    const productsParsed = products ? JSON.parse(products) : '';
+    if (productsParsed) {
+        quantity.value = productsParsed.length;
+    }
+})
 </script>
 <template>
-  <NavBar />
+  <NavBar :quantity="quantity"/>
   <FormProfile :handleClick="managerPages" v-if="isEdit" :isFormPassword="isFormPassword" />
   <ProfileData v-else :handleClick="managerPages" />
 </template>

@@ -3,6 +3,10 @@ import { useRouter } from 'vue-router';
 import { Auth } from '../utils/auth';
 import { ref } from 'vue';
 
+defineProps < {
+  quantity: number;
+}>()
+
 const auth = new Auth();
 const isLoggedIn = ref(auth.isLoggedIn());
 const route = useRouter();
@@ -31,6 +35,7 @@ const signOut = function () {
             <a class="nav-link" href="/dashboard/cart">
                <i class="fas fa-shopping-cart"></i>
             </a>
+            <div class="number-products">{{ quantity }}</div>
            </li>
         <nav>
           <a class="btn btn-outline-info text-white my-2 my-sm-0 p-2" @click.prevent="signOut">Sign Out</a>
@@ -49,5 +54,9 @@ const signOut = function () {
       color: white !important;
     }
 
+.number-products {
+  display: flex;
+  color: red;
+}
 </style>
 

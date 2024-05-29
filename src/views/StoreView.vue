@@ -5,6 +5,7 @@ import { onMounted, ref } from 'vue';
 import { StoreService } from '@/api/storeService';
 import debounce from 'lodash/debounce';
 
+const quantity = ref(0);
 const storeService = new StoreService();
 const stores = ref<any>([])
 const pagination = ref({
@@ -38,7 +39,7 @@ const getlist = (page: number, search = '', category = '') => {
           ...store,
           src: store.avatar_url,
       }));
-      pagination.value.next = data.pagination.next || 1;
+      pagination.value.next = data.pagination.next ? data.pagination.next : 1;
       pagination.value.previous = data.pagination.previous || 1;
       pagination.value.previous = data.pagination.pages;
       pagination.value.current = data.pagination.current;
@@ -53,11 +54,16 @@ const getlist = (page: number, search = '', category = '') => {
 }
 
 onMounted(() => {
+   const products = localStorage.getItem('cart') || '';
+    const productsParsed = products ? JSON.parse(products) : '';
+    if (productsParsed) {
+        quantity.value = productsParsed.length;
+    }
   getlist(1);
 })
 </script>
 <template>
-  <NavBar />
+  <NavBar :quantity="quantity"/>
   <ListingStores
    v-if="stores" 
    :entity="stores"

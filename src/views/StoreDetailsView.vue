@@ -23,7 +23,7 @@ const changePage = (page: any) => {
     getlist(page)
   }
 };
-
+const quantity = ref(0);
 const addProductsInCart = (id: number) => {
   const data = localStorage.getItem('cart') || '';
   const dataParsed = data ? JSON.parse(data) : [];
@@ -38,6 +38,7 @@ const addProductsInCart = (id: number) => {
   localStorage.setItem('cart', JSON.stringify(dataParsed))
   cartIds.value.push(id)
   products.value[index].inCart = true
+  quantity.value = dataParsed.length
 }
 
 const removeProductsInCart = (id: number) => {
@@ -49,7 +50,8 @@ const removeProductsInCart = (id: number) => {
   products.value[indexProduct].inCart = false
 
   const index = cartIds.value.findIndex((element: number) => element === id);
-   cartIds.value.splice(index, 1)
+  cartIds.value.splice(index, 1)
+  quantity.value = cartIds.value.length
 }
 
 const searchQuery = defineModel('searchQuery', { default: '' })
@@ -92,12 +94,12 @@ onMounted(() => {
   parseCart.forEach((product: any) => {
     cartIds.value.push(product.id)
   })
-  console.log(cartIds.value)
+  quantity.value = cartIds.value.length
   getlist(1);
 })
 </script>
 <template>
-  <NavBar />
+  <NavBar :quantity="quantity"/>
   <ListingStores
    v-if="products" 
    :entity="products" 
