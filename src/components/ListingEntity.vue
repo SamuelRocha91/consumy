@@ -2,11 +2,14 @@
 import { ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
-const { entity, pagination } = defineProps < {
+const { entity, pagination } = defineProps <{
     entity: any,
     pagination: any,
     handlePage: (data?: any) => void,
-    search: () => void
+    search: () => void,
+    addProductsInCart: (id: number) => void,
+    idsInCart?: any,
+    removeProductsInCart: (id: number) => void
 }>()
 
 const URL = import.meta.env.VITE_BASE_URL;
@@ -18,7 +21,8 @@ const route = useRoute();
 const searchProducts = (id: number) => {
   router.push(`/dashboard/stores/${id}`)
 }
-console.log(route.path)
+console.log(entity)
+
 </script>
 <template>
   <div class="container">
@@ -60,7 +64,8 @@ console.log(route.path)
             <p v-if="route.path !== '/dashboard/stores'" class="card-text"><strong>Preço:</strong> {{ data.price }}</p>
             <p class="card-text"><strong>Distância:</strong> 2 km</p>
             <a v-if="route.path == '/dashboard/stores'" @click="searchProducts(data.id)" class="btn btn-primary">Ver Produtos</a>
-             <a v-if="route.path !== '/dashboard/stores'" @click.prevent="searchProducts(data.id)" class="btn btn-primary">Adicionar ao carrinho</a>
+             <a v-if="!data.inCart" @click.prevent="addProductsInCart(data.id)" class="btn btn-primary">Adicionar ao carrinho</a>
+              <a v-if="data.inCart" @click.prevent="removeProductsInCart(data.id)" class="btn btn-danger">Remover produto</a>
           </div>
         </div>
       </div>

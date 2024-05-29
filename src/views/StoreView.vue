@@ -38,8 +38,8 @@ const getlist = (page: number, search = '', category = '') => {
           ...store,
           src: store.avatar_url,
       }));
-      pagination.value.next = data.pagination.next;
-      pagination.value.previous = data.pagination.previous;
+      pagination.value.next = data.pagination.next || 1;
+      pagination.value.previous = data.pagination.previous || 1;
       pagination.value.previous = data.pagination.pages;
       pagination.value.current = data.pagination.current;
 
@@ -60,12 +60,15 @@ onMounted(() => {
   <NavBar />
   <ListingStores
    v-if="stores" 
-   :entity="stores" 
+   :entity="stores"
+   :addProductsInCart="() => console.log('nada')"
    :pagination="pagination" 
    :handlePage="changePage" 
    :search="debouncedSearch"
    v-model:searchQuery="searchQuery"
    v-model:selectedCategory="selectedCategory"
+      :removeProductsInCart="() => console.log('nada')"
+
    />
 </template>
 
