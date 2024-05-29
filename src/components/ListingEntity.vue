@@ -21,8 +21,6 @@ const route = useRoute();
 const searchProducts = (id: number) => {
   router.push(`/dashboard/stores/${id}`)
 }
-console.log(entity)
-
 </script>
 <template>
   <div class="container">

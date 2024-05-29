@@ -12,6 +12,10 @@ defineProps < {
             <h5 class="card-title">{{ product.title }}</h5>
             <p class="card-text">{{ product.description }}</p>
              <div class="d-flex justify-content-between align-items-center mb-3">
+                <p class="font-weight-bold mb-0">Quantidade:</p>
+                <p class=" mb-0">{{ product.quantity }}</p>
+             </div>
+             <div class="d-flex justify-content-between align-items-center mb-3">
                 <p class="font-weight-bold mb-0">Preço</p>
                 <p class="text-success mb-0">{{ product.price }}</p>
              </div>
