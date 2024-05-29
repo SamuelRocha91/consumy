@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 const { entity, pagination } = defineProps < {
     entity: any,
@@ -14,10 +14,11 @@ const searchQuery = defineModel('searchQuery', { default: '' });
 const selectedCategory = defineModel('selectedCategory', { default: '' });
 const currentPage = ref(1);
 const router = useRouter();
+const route = useRoute();
 const searchProducts = (id: number) => {
   router.push(`/dashboard/stores/${id}`)
 }
-
+console.log(route.path)
 </script>
 <template>
   <div class="container">
@@ -56,8 +57,10 @@ const searchProducts = (id: number) => {
             <h5 class="card-title">{{ data.name }}</h5>
             <p class="card-text">{{ data.description }}</p>
             <p class="card-text"><strong>Categoria:</strong> {{ data.category }}</p>
+            <p v-if="route.path !== '/dashboard/stores'" class="card-text"><strong>Preço:</strong> {{ data.price }}</p>
             <p class="card-text"><strong>Distância:</strong> 2 km</p>
-            <a @click.prevent="searchProducts(data.id)" class="btn btn-primary">Ver Produtos</a>
+            <a v-if="route.path == '/dashboard/stores'" @click="searchProducts(data.id)" class="btn btn-primary">Ver Produtos</a>
+             <a v-if="route.path !== '/dashboard/stores'" @click.prevent="searchProducts(data.id)" class="btn btn-primary">Adicionar ao carrinho</a>
           </div>
         </div>
       </div>

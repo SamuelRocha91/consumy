@@ -16,6 +16,7 @@ abstract class BaseService {
     }
 
     protected async getAll(path: string): Promise<Response> {
+        console.log(path)
         const token = this.getFallback('token');
         const response = await fetch(`${this.apiUrl}/${path}`,
             {

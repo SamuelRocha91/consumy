@@ -14,7 +14,7 @@ class ProductService extends BaseService{
     searchQuery = '',
     category = '',
   ) {
-    const response = await this.getAll(`stores/${id}/products?page=${page}&name=${searchQuery}&category=${category}`);
+    const response = await this.getAll(`stores/${id}/products?page=${page}&name=${searchQuery}&category=${category}&locale=pt-BR`);
     if (response.ok) {
       this.success(response, onSuccess, id);
     } else {

@@ -39,13 +39,11 @@ const router = createRouter({
       path: '/dashboard/stores',
       name: 'rango',
       component: StoreView,
-      children: [
-        {
-          path: ':id',
-          component: StoreDetailsView,
-          name: 'StoreDetails',
-        },
-      ]
+    },
+    {
+      path: '/dashboard/stores/:id',
+      component: StoreDetailsView,
+      name: 'StoreDetails',
     },
   ]
 })

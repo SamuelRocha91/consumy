@@ -43,8 +43,8 @@ const getlist = (page: number, search = '', category = '') => {
           src: product.image_url,
           name: product.title
       }));
-      pagination.value.next = data.pagination.next;
-      pagination.value.previous = data.pagination.previous;
+      pagination.value.next = data.pagination.next || 1;
+      pagination.value.previous = data.pagination.previous || 1;
       pagination.value.previous = data.pagination.pages;
       pagination.value.current = data.pagination.current;
 

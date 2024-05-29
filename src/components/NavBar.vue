@@ -13,23 +13,41 @@ const signOut = function () {
 }
 </script>
 <template>
-    <nav class="navbar navbar-dark bg-dark px-3 p-2 d-flex align-items-center">
+    <nav class="navbar navbar-dark bg-info px-3 p-2 d-flex align-items-center">
         <h3 class="navbar-brand p-2">Olá, {{ currentUser && currentUser.email }}</h3>
-          <li class="nav-item p-2 d-flex">
-            <a class="nav-link" href="/dashboard">Home</a>
+          <li class="nav-item  p-2 d-flex">
+            <a class="nav-link text-white" href="/dashboard">Home</a>
           </li>
           <li class="nav-item p-2 d-flex">
-            <a class="nav-link" href="">Pedidos</a>
+            <a class="nav-link text-white" href="">Pedidos</a>
           </li>
           <li class="nav-item p-2 d-flex">
-            <a class="nav-link" href="/dashboard/stores">Quero comer</a>
+            <a class="nav-link text-white" href="/dashboard/stores">Quero comer</a>
           </li>
           <li class="nav-item p-2 d-flex">
-            <a class="nav-link" href="/dashboard/profile">Perfil</a>
+            <a class="nav-link text-white" href="/dashboard/profile">Perfil</a>
           </li>
+          <li class="nav-item p-2 d-flex">
+            <a class="nav-link" href="/cart">
+               <i class="fas fa-shopping-cart"></i>
+            </a>
+           </li>
         <nav>
-          <a class="btn btn-outline-info text-info my-2 my-sm-0 p-2" @click.prevent="signOut">Sign Out</a>
+          <a class="btn btn-outline-info text-white my-2 my-sm-0 p-2" @click.prevent="signOut">Sign Out</a>
         </nav>
     </nav>
 </template>
+
+<style scoped>
+ .nav-item {
+      color: white;
+      margin: 0 1rem;
+      text-decoration: none;
+    }
+
+    .nav-link {
+      color: white !important;
+    }
+
+</style>
 
