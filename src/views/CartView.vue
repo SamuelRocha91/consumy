@@ -18,6 +18,7 @@ const removeCart = (id: number) => {
     cart.value = list;
     localStorage.setItem('cart', JSON.stringify(list))
 }
+
 </script>
  
 <template>

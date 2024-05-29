@@ -64,8 +64,8 @@ console.log(entity)
             <p v-if="route.path !== '/dashboard/stores'" class="card-text"><strong>Preço:</strong> {{ data.price }}</p>
             <p class="card-text"><strong>Distância:</strong> 2 km</p>
             <a v-if="route.path == '/dashboard/stores'" @click="searchProducts(data.id)" class="btn btn-primary">Ver Produtos</a>
-             <a v-if="!data.inCart" @click.prevent="addProductsInCart(data.id)" class="btn btn-primary">Adicionar ao carrinho</a>
-              <a v-if="data.inCart" @click.prevent="removeProductsInCart(data.id)" class="btn btn-danger">Remover produto</a>
+             <a v-if="route.path !== '/dashboard/stores' && !data.inCart" @click.prevent="addProductsInCart(data.id)" class="btn btn-primary">Adicionar ao carrinho</a>
+              <a v-if="route.path !== '/dashboard/stores' && data.inCart" @click.prevent="removeProductsInCart(data.id)" class="btn btn-danger">Remover produto</a>
           </div>
         </div>
       </div>
