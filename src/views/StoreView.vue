@@ -3,6 +3,7 @@ import NavBar from '@/components/NavBar.vue';
 import ListingStores from '@/components/ListingEntity.vue';
 import { onMounted, ref } from 'vue';
 import { StoreService } from '@/api/storeService';
+import debounce from 'lodash/debounce';
 
 const storeService = new StoreService();
 const stores = ref<any>([])
@@ -17,19 +18,21 @@ const changePage = (page: any) => {
     getlist(page)
   }
 };
-const search = defineModel('search', { default: '' })
-const category = defineModel('category', {default: ''})
+const searchQuery = defineModel('v', { default: '' })
+const selectedCategory = defineModel('selectedCategory', {default: ''})
 
 const filteredStores = () => {
-  getlist(1, search.value, category.value)
+  getlist(1, searchQuery.value, selectedCategory.value)
 };
+
+const debouncedSearch = debounce(filteredStores, 300);
 
 const getlist = (page: number, search = '', category = '') => {
    storeService.getStores(
         page,
       (data: any) => {
       console.log(data)
-        stores.value = data.stores.map((store: any) => ({
+        stores.value = data.result.stores.map((store: any) => ({
           ...store,
           src: store.avatar_url,
       }));
@@ -57,7 +60,11 @@ onMounted(() => {
    v-if="stores" 
    :entity="stores" 
    :pagination="pagination" 
-   :handlePage="changePage" />
+   :handlePage="changePage" 
+   :search="debouncedSearch"
+   v-model:searchQuery="searchQuery"
+   v-model:selectedCategory="selectedCategory"
+   />
 </template>
 
 <style scoped>

@@ -1,19 +1,17 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 
 const { entity, pagination } = defineProps < {
     entity: any,
     pagination: any,
-    handlePage: (data?: any) => void
+    handlePage: (data?: any) => void,
+    search: () => void
 }>()
 
 const URL = import.meta.env.VITE_BASE_URL;
-const searchQuery = ref('');
-const selectedCategory = ref('');
+const searchQuery = defineModel('searchQuery', { default: '' });
+const selectedCategory = defineModel('selectedCategory', { default: '' });
 const currentPage = ref(1);
-
-
-
 
 </script>
 <template>
@@ -26,6 +24,7 @@ const currentPage = ref(1);
           placeholder="Busque pelo nome da loja"
           type="search"
           v-model="searchQuery"
+          @input="search"
         >
       </div>
       <div class="col-md-6 mb-3">
@@ -33,6 +32,8 @@ const currentPage = ref(1);
           id="category-filter"
           class="form-control select-box-2"
           v-model="selectedCategory"
+          @change="search"
+
         >
           <option value="" disabled selected>Filtrar por categoria</option>
           <option value="categoria">Categoria</option>
@@ -43,7 +44,7 @@ const currentPage = ref(1);
 
   <div class="container">
     <div class="row">
-      <div class="col-md-4 mb-4" v-for="(data, index) in filteredStores" :key="index">
+      <div class="col-md-4 mb-4" v-for="(data, index) in entity" :key="index">
         <div class="card card-store">
           <img :src="URL + data.src" class="card-img-top" alt="Store Image">
           <div class="card-body">
