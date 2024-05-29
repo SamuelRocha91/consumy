@@ -21,49 +21,6 @@ class StoreService extends BaseService{
     }
   }
 
-  async createStore(
-    dataStore: storeType,
-    onSuccess: () => void,
-    onFailure: () => void
-  ) {
-    const formData = this.formData(dataStore);
-    formData.append('store[avatar]', dataStore.src);
-    const response = await this.create('stores', formData);
-    if (response.ok) {
-      this.success(response, onSuccess);
-    } else {
-      this.failure(response, onFailure);
-    }
-  }
-
-  async updateStore(
-    id: number,
-    dataStore: storeType,
-    image: File | string | null,
-    onSuccess: () => void,
-    onFailure: () => void
-  ) {
-    const formData = this.formData(dataStore);
-    if (image !== null) {
-      formData.append('store[avatar]', image);
-    }
-    const response = await this.update(id, 'stores', formData);
-    if (response.ok) {
-      this.success(response, onSuccess, "update");
-    } else {
-      this.failure(response, onFailure);
-    }
-  }
-  
-  async deleteStore(id: number, onSuccess: () => void, onFailure: () => void) {
-    const response = await this.delete(id, 'stores');
-    if (response.ok) {
-      onSuccess();
-    } else {
-      this.failure(response, onFailure);
-    }
-  }
-
   failure(response: Response, onFailure: () => void) {
     onFailure();
   }
@@ -78,12 +35,7 @@ class StoreService extends BaseService{
         this.generateStorage(json);
         onSuccess(json);
       });
-    } else if (type == "update") {
-      response.json().then(async (json) => {
-        this.updateStorage(json);
-        onSuccess();
-      });
-    } else {
+    }  else {
       onSuccess();
     }
   }

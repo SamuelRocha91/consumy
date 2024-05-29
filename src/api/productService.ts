@@ -20,60 +20,6 @@ class ProductService extends BaseService{
     }
   }
   
-  async createProduct(
-    id: number,
-    dataProduct: any,
-    onSuccess: () => void,
-    onFailure: () => void
-  ) {
-    const formData = this.formData(dataProduct);
-    if (dataProduct.src) {
-      formData.append('product[image]', dataProduct.src);
-    }
-    const response = await this.create(`stores/${id}/products`, formData);
-    if (response.ok) {
-      this.success(response, onSuccess, id);
-    } else {
-      this.failure(response, onFailure);
-    }
-  }
-
-  async updateProduct(
-    id: number,
-    idProduct: number,
-    dataProduct: any,
-    image: File | string | null,
-    onSuccess: () => void,
-    onFailure: () => void,
-  ) {
-    const formData = this.formData(dataProduct);
-    if (image !== null) {
-      formData.append('product[image]', image);
-    }
-    const response = await this.update(
-      idProduct,
-      `stores/${id}/products`,
-      formData
-    );
-    if (response.ok) {
-      this.success(response, onSuccess, id, "update");
-    } else {
-      this.failure(response, onFailure);
-    }
-  }
-
-  async deleteProduct(
-    id: number,
-    idProduct: number,
-    onSuccess: () => void,
-    onFailure: () => void) {
-    const response = await this.delete(idProduct, `stores/${id}/products`);
-    if (response.ok) {
-      onSuccess();
-    } else {
-      this.failure(response, onFailure);
-    }
-  }
 
   success(
     response: Response,
@@ -84,11 +30,6 @@ class ProductService extends BaseService{
     if (type == "generate") {
       response.json().then((json) => {
         onSuccess(json);
-      });
-    } else if (type == "update") {
-      response.json().then(async (json) => {
-        this.updateStorage(json, id);
-        onSuccess();
       });
     } else {
       onSuccess();

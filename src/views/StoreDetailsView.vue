@@ -2,11 +2,11 @@
 import NavBar from '@/components/NavBar.vue';
 import ListingStores from '@/components/ListingEntity.vue';
 import { onMounted, ref } from 'vue';
-import { StoreService } from '@/api/storeService';
 import debounce from 'lodash/debounce';
+import { ProductService } from '@/api/productService';
 
-const storeService = new StoreService();
-const stores = ref<any>([])
+const productsService = new ProductService();
+const products = ref<any>([])
 const pagination = ref({
   current: 1,
   next: 0,
@@ -30,13 +30,14 @@ const filteredStores = () => {
 const debouncedSearch = debounce(filteredStores, 300);
 
 const getlist = (page: number, search = '', category = '') => {
-   storeService.getStores(
+   productsService.getStores(
         page,
       (data: any) => {
       console.log(data)
-        stores.value = data.result.stores.map((store: any) => ({
-          ...store,
-          src: store.avatar_url,
+        products.value = data.result.products.map((product: any) => ({
+          ...product,
+          src: product.image_url,
+          name: product.title
       }));
       pagination.value.next = data.pagination.next;
       pagination.value.previous = data.pagination.previous;
@@ -59,8 +60,8 @@ onMounted(() => {
 <template>
   <NavBar />
   <ListingStores
-   v-if="stores" 
-   :entity="stores" 
+   v-if="products" 
+   :entity="products" 
    :pagination="pagination" 
    :handlePage="changePage" 
    :search="debouncedSearch"
