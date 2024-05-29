@@ -9,9 +9,11 @@ class StoreService extends BaseService{
   async getStores(
     page: number,
     onSuccess: (data: any) => void,
-    onFailure: () => void
+    onFailure: () => void,
+    searchQuery = '',
+    category = '',
   ) {
-    const response = await this.getAll(`stores?page=${page}`);
+    const response = await this.getAll(`stores?page=${page}&name=${searchQuery}&category=${category}`);
     if (response.ok) {
       this.success(response, onSuccess);
     } else {

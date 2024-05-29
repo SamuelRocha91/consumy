@@ -12,9 +12,10 @@
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write src/",
-     "type": "vue-tsc --build --force --watch"
+    "type": "vue-tsc --build --force --watch"
   },
   "dependencies": {
+    "lodash": "^4.17.21",
     "sweetalert2": "^11.10.7",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5"

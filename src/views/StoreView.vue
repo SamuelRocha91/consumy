@@ -17,8 +17,14 @@ const changePage = (page: any) => {
     getlist(page)
   }
 };
+const search = defineModel('search', { default: '' })
+const category = defineModel('category', {default: ''})
 
-const getlist = (page: number) => {
+const filteredStores = () => {
+  getlist(1, search.value, category.value)
+};
+
+const getlist = (page: number, search = '', category = '') => {
    storeService.getStores(
         page,
       (data: any) => {
@@ -35,7 +41,9 @@ const getlist = (page: number) => {
         } ,
         () => {
             console.log('falhoooooouuuu')
-      },
+     },
+     search,
+     category
     ) 
 }
 

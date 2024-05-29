@@ -12,16 +12,7 @@ const searchQuery = ref('');
 const selectedCategory = ref('');
 const currentPage = ref(1);
 
-const filteredStores = computed(() => {
-  let filtered = entity.value;
-  if (searchQuery.value) {
-    filtered = filtered.filter((data: any) => data.name.toLowerCase().includes(searchQuery.value.toLowerCase()));
-  }
-  if (selectedCategory.value) {
-    filtered = filtered.filter((data: any) => data.category === selectedCategory.value);
-  }
-  return filtered || [];
-});
+
 
 
 </script>
