@@ -78,7 +78,8 @@ const getlist = (page: number, search = '', category = '') => {
           ...product,
           src: product.image_url,
           name: product.title,
-          inCart: cartIds.value.some((id: number) => id == product.id )
+          inCart: cartIds.value.some((id: number) => id == product.id),
+          quantity: 1
         }));
       pagination.value.next = data.pagination.next || 1;
       pagination.value.previous = data.pagination.previous || 1;
