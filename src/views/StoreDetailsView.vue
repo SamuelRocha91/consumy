@@ -4,6 +4,8 @@ import ListingStores from '@/components/ListingEntity.vue';
 import { onMounted, ref } from 'vue';
 import debounce from 'lodash/debounce';
 import { ProductService } from '@/api/productService';
+import { useRoute } from 'vue-router';
+
 
 const productsService = new ProductService();
 const products = ref<any>([])
@@ -13,6 +15,8 @@ const pagination = ref({
   previous: 0,
   pages: 0
 })
+const route = useRoute();
+const storeId = ref(route.params.id);
 
 const changePage = (page: any) => {
   if (page > 0 && page <= pagination.value.pages) {
@@ -30,8 +34,8 @@ const filteredStores = () => {
 const debouncedSearch = debounce(filteredStores, 300);
 
 const getlist = (page: number, search = '', category = '') => {
-   productsService.getStores(
-        page,
+   productsService.getProducts(
+      Number(storeId.value),
       (data: any) => {
       console.log(data)
         products.value = data.result.products.map((product: any) => ({
@@ -48,8 +52,9 @@ const getlist = (page: number, search = '', category = '') => {
         () => {
             console.log('falhoooooouuuu')
      },
+     page,
      search,
-     category
+     category,
     ) 
 }
 

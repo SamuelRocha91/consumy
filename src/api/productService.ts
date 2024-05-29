@@ -10,9 +10,11 @@ class ProductService extends BaseService{
     id: number,  
     onSuccess: (data?: any) => void,
     onFailure: () => void,
-    page: number
+    page: number,
+    searchQuery = '',
+    category = '',
   ) {
-    const response = await this.getAll(`stores/${id}/products?page=${page}`);
+    const response = await this.getAll(`stores/${id}/products?page=${page}&name=${searchQuery}&category=${category}`);
     if (response.ok) {
       this.success(response, onSuccess, id);
     } else {
