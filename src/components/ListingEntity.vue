@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const { entity, pagination } = defineProps < {
     entity: any,
@@ -12,6 +13,10 @@ const URL = import.meta.env.VITE_BASE_URL;
 const searchQuery = defineModel('searchQuery', { default: '' });
 const selectedCategory = defineModel('selectedCategory', { default: '' });
 const currentPage = ref(1);
+const router = useRouter();
+const searchProducts = (id: number) => {
+  router.push(`/dashboard/stores/${id}`)
+}
 
 </script>
 <template>
@@ -52,7 +57,7 @@ const currentPage = ref(1);
             <p class="card-text">{{ data.description }}</p>
             <p class="card-text"><strong>Categoria:</strong> {{ data.category }}</p>
             <p class="card-text"><strong>Distância:</strong> 2 km</p>
-            <a href="#" class="btn btn-primary">Ver Produtos</a>
+            <a @click.prevent="searchProducts(data.id)" class="btn btn-primary">Ver Produtos</a>
           </div>
         </div>
       </div>

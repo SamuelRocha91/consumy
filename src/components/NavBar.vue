@@ -22,7 +22,7 @@ const signOut = function () {
             <a class="nav-link" href="">Pedidos</a>
           </li>
           <li class="nav-item p-2 d-flex">
-            <a class="nav-link" href="/dashboard/rango">Quero comer</a>
+            <a class="nav-link" href="/dashboard/stores">Quero comer</a>
           </li>
           <li class="nav-item p-2 d-flex">
             <a class="nav-link" href="/dashboard/profile">Perfil</a>

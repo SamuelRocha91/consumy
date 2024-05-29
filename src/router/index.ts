@@ -35,9 +35,16 @@ const router = createRouter({
       component: ProfileView
     },
     {
-      path: '/dashboard/rango',
+      path: '/dashboard/stores',
       name: 'rango',
-      component: StoreView
+      component: StoreView,
+      children: [
+        {
+          path: ':id',
+          component: StoreDetailsView,
+          name: 'StoreDetails',
+        },
+      ]
     },
   ]
 })

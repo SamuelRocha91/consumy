@@ -18,7 +18,7 @@ const changePage = (page: any) => {
     getlist(page)
   }
 };
-const searchQuery = defineModel('v', { default: '' })
+const searchQuery = defineModel('searchQuery', { default: '' })
 const selectedCategory = defineModel('selectedCategory', {default: ''})
 
 const filteredStores = () => {
