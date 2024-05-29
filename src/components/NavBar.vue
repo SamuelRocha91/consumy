@@ -28,7 +28,7 @@ const signOut = function () {
             <a class="nav-link text-white" href="/dashboard/profile">Perfil</a>
           </li>
           <li class="nav-item p-2 d-flex">
-            <a class="nav-link" href="/cart">
+            <a class="nav-link" href="/dashboard/cart">
                <i class="fas fa-shopping-cart"></i>
             </a>
            </li>

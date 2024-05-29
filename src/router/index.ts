@@ -45,6 +45,11 @@ const router = createRouter({
       component: StoreDetailsView,
       name: 'StoreDetails',
     },
+    {
+      path: '/dashboard/cart',
+      component: CartView,
+      name: 'StoreDetails',
+    }
   ]
 })
 
