@@ -5,6 +5,7 @@ import { onMounted, ref } from 'vue';
 import debounce from 'lodash/debounce';
 import { ProductService } from '@/api/productService';
 import { useRoute } from 'vue-router';
+import Swal from 'sweetalert2';
 
 const productsService = new ProductService();
 const products = ref<any>([])
@@ -14,6 +15,7 @@ const pagination = ref({
   previous: 0,
   pages: 0
 })
+
 const route = useRoute();
 const storeId = ref(route.params.id);
 const cartIds = ref<any>([])
@@ -24,7 +26,11 @@ const changePage = (page: any) => {
   }
 };
 const quantity = ref(0);
-const addProductsInCart = (id: number) => {
+const addProductsInCart = (id: number, selectQuantity: string) => {
+  if (!selectQuantity) {
+    Swal.fire("Por favor, preencha a quantidade antes de adicionar ao carrinho");
+    return
+  }
   const data = localStorage.getItem('cart') || '';
   const dataParsed = data ? JSON.parse(data) : [];
   const product = products.value.find((product: any) => product.id === id)
@@ -32,7 +38,8 @@ const addProductsInCart = (id: number) => {
 
   const newObjectCart = {
     ...product,
-    storeId: storeId.value
+    storeId: storeId.value,
+    quantity: selectQuantity,
    }
   dataParsed.push(newObjectCart)
   localStorage.setItem('cart', JSON.stringify(dataParsed))

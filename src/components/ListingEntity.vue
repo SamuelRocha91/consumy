@@ -7,7 +7,7 @@ const { entity, pagination } = defineProps <{
     pagination: any,
     handlePage: (data?: any) => void,
     search: () => void,
-    addProductsInCart: (id: number) => void,
+    addProductsInCart: (id: number, quantity: string) => void,
     idsInCart?: any,
     removeProductsInCart: (id: number) => void
 }>()
@@ -15,6 +15,7 @@ const { entity, pagination } = defineProps <{
 const URL = import.meta.env.VITE_BASE_URL;
 const searchQuery = defineModel('searchQuery', { default: '' });
 const selectedCategory = defineModel('selectedCategory', { default: '' });
+const selectQuantity = defineModel('selectQuantity', { default: '' });
 const currentPage = ref(1);
 const router = useRouter();
 const route = useRoute();
@@ -62,9 +63,14 @@ console.log(entity)
             <p class="card-text">{{ data.description }}</p>
             <p class="card-text"><strong>Categoria:</strong> {{ data.category }}</p>
             <p v-if="route.path !== '/dashboard/stores'" class="card-text"><strong>Preço:</strong> {{ data.price }}</p>
+            <p v-if="route.path !== '/dashboard/stores'" class="card-text"><strong>Quantidade:</strong> 
+              <select v-model="selectQuantity" id="">
+                <option v-for="n in 9" :value="n" :key="n">{{ n }}</option>
+              </select>
+            </p>
             <p class="card-text"><strong>Distância:</strong> 2 km</p>
             <a v-if="route.path == '/dashboard/stores'" @click="searchProducts(data.id)" class="btn btn-primary">Ver Produtos</a>
-             <a v-if="route.path !== '/dashboard/stores' && !data.inCart" @click.prevent="addProductsInCart(data.id)" class="btn btn-primary">Adicionar ao carrinho</a>
+             <a v-if="route.path !== '/dashboard/stores' && !data.inCart" @click.prevent="addProductsInCart(data.id, selectQuantity)" class="btn btn-primary">Adicionar ao carrinho</a>
               <a v-if="route.path !== '/dashboard/stores' && data.inCart" @click.prevent="removeProductsInCart(data.id)" class="btn btn-danger">Remover produto</a>
           </div>
         </div>
