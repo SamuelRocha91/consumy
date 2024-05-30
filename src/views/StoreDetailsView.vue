@@ -13,7 +13,7 @@ import {
   type productType
 } from '@/types/productTypes';
 
-const cartIds = ref<any>([]);
+const cartIds = ref<number[]>([]);
 const pagination = ref({
   current: 1,
   next: 0,

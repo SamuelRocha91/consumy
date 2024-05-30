@@ -1,5 +1,5 @@
 import { BaseService } from './abstractService';
-
+import { type dataStoreRequest } from '@/types/storeTypes';
 class StoreService extends BaseService{
   constructor() {
     super();
@@ -7,7 +7,7 @@ class StoreService extends BaseService{
 
   async getStores(
     page: number,
-    onSuccess: (data: any) => void,
+    onSuccess: (data: dataStoreRequest) => void,
     onFailure: (data: any) => void,
     searchQuery = '',
     category = '',
@@ -29,7 +29,7 @@ class StoreService extends BaseService{
 
   success(
     response: Response,
-    onSuccess: (data?: any) => void,
+    onSuccess: (data: dataStoreRequest) => void,
   ) {
     response.json().then((json) => {
       onSuccess(json);

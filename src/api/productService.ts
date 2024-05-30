@@ -1,4 +1,5 @@
 import { BaseService } from './abstractService';
+import { type dataProductsRequest } from '@/types/productTypes';
 
 class ProductService extends BaseService{
 
@@ -8,7 +9,7 @@ class ProductService extends BaseService{
   
   async getProducts(
     id: number,  
-    onSuccess: (data?: any) => void,
+    onSuccess: (data: dataProductsRequest) => void,
     onFailure: (data? :any) => void,
     page: number,
     searchQuery = '',
@@ -29,7 +30,7 @@ class ProductService extends BaseService{
   
   success(
     response: Response,
-    onSuccess: (data?: any) => void,
+    onSuccess: (data: dataProductsRequest) => void,
   ) {
     response.json().then((json) => {
       onSuccess(json);
