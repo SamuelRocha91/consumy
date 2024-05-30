@@ -16,7 +16,7 @@ defineProps < {
                 <p class=" mb-0">{{ product.quantity }}</p>
              </div>
              <div class="d-flex justify-content-between align-items-center mb-3">
-                <p class="font-weight-bold mb-0">Preço</p>
+                <p class="font-weight-bold mb-0">Preço da unidade:</p>
                 <p class="text-success mb-0">{{ product.price }}</p>
              </div>
             <button @click.prevent="removeCart(product.id)" class="btn btn-danger">Remover do carrinho</button>
