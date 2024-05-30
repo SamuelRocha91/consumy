@@ -1,60 +1,61 @@
- <script setup lang="ts">
- import { onMounted, ref } from 'vue';
+<script setup lang="ts">
+import { onMounted, ref } from 'vue';
 import NavBar from '@/components/NavBar.vue';
 import CartList from '@/components/CartList.vue';
 import CartEmpty from '@/components/CartEmpty.vue';
-
-const quantity = ref(0);
-const total = ref("");
+import { useSharedRefs } from '@/utils/useSharedRefs';
+import { createStorage } from '@/utils/storage';
 
 const cart = ref([]);
+const quantity = useSharedRefs().quantity;
+const storage = createStorage(true);
+const total = ref("");
+
+const formatPrice = (price: number) => {
+  return price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+};
 
 const parsePrice = (priceString: string) => {
   return parseFloat(priceString.replace('R$', '').replace(',', '.'));
-}
+};
 
 const sumPrices = (priceStrings: string[]) => {
   return priceStrings.reduce((total, priceString) => {
     return total + parsePrice(priceString);
   }, 0);
-}
-
-const formatPrice = (price: number) => {
-  return price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-}
+};
 
 onMounted(() => {
-    const arrayPrices: string[] = []
-    const products = localStorage.getItem('cart') || '';
-    const productsParsed = products ? JSON.parse(products) : '';
-    if (productsParsed) {
-        cart.value = productsParsed;
-        quantity.value = productsParsed.length;
-        productsParsed.forEach((product: any) => {
-            for (let i = 0; i < product.quantity; i += 1) {
-                arrayPrices.push(product.price)
-            }
-        })
-        const sum = sumPrices(arrayPrices);
-        total.value = formatPrice(sum);
-    }
-})
+  const arrayPrices: string[] = [];
+  const data = storage.get('cart') || '[]';
+  const dataParsed = JSON.parse(data);
+  if (dataParsed) {
+    cart.value = dataParsed;
+    quantity.value = dataParsed.length;
+    dataParsed.forEach((product: any) => {
+      for (let i = 0; i < product.quantity; i += 1) {
+        arrayPrices.push(product.price);
+      }
+    });
+    const sum = sumPrices(arrayPrices);
+    total.value = formatPrice(sum);
+  }
+});
 
 const removeCart = (id: number) => {
-    const arrayPrices: string[] = []
-    const list = cart.value.filter((product: any) => product.id !== id);
-    cart.value = list;
-    localStorage.setItem('cart', JSON.stringify(list))
-    quantity.value = list.length;
-    cart.value.forEach((product: any) => {
-            for (let i = 0; i < product.quantity; i += 1) {
-                arrayPrices.push(product.price)
-            }
-        })
-        const sum = sumPrices(arrayPrices);
-        total.value = formatPrice(sum);
-}
-
+  const arrayPrices: string[] = [];
+  const list = cart.value.filter((product: any) => product.id !== id);
+  cart.value = list;
+  storage.store('cart', JSON.stringify(list));
+  quantity.value = list.length;
+  cart.value.forEach((product: any) => {
+    for (let i = 0; i < product.quantity; i += 1) {
+      arrayPrices.push(product.price);
+    }
+  });
+  const sum = sumPrices(arrayPrices);
+  total.value = formatPrice(sum);
+};
 </script>
  
 <template>
