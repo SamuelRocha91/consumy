@@ -1,16 +1,20 @@
- <script setup lang="ts">
+<script setup lang="ts">
 import NavBar from '@/components/NavBar.vue';
 import HomePage from '@/components/HomePage.vue';
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
+import { createStorage } from '@/utils/storage';
+import { useSharedRefs } from '@/utils/useSharedRefs';
 
-const quantity = ref(0);
+const quantity = useSharedRefs().quantity;
+const storage = createStorage(true);
+
 onMounted(() => {
-    const products = localStorage.getItem('cart') || '';
-    const productsParsed = products ? JSON.parse(products) : '';
-    if (productsParsed) {
-        quantity.value = productsParsed.length;
-    }
-})
+  const data = storage.get('cart') || '[]';
+  const dataParsed = JSON.parse(data);
+  if (dataParsed) {
+    quantity.value = dataParsed.length;
+  }
+});
 </script>
  
 
