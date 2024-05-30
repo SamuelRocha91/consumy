@@ -1,23 +1,24 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-import { ref } from 'vue'
-import { Auth } from '../utils/auth'
-import Swal from 'sweetalert2';
+import { useRouter } from 'vue-router';
+import { ref } from 'vue';
+import { Auth } from '../utils/auth';
+import Swal from 'sweetalert2';;
+import { createStorage } from '@/utils/storage';
 
-const router = useRouter();
-
-const email = defineModel<string>('email', { default: '' })
-const password = ref('')
-const password_confirmation =  ref('')
-const cep = ref('');
-const name = ref('');
-const state = ref('');
-const city = ref('');
 const address = ref('');
-const awaiting = ref(false)
-const remember = defineModel<boolean>('remember', { default: true })
+const awaiting = ref(false);
+const cep = ref('');
+const city = ref('');
+const email = defineModel<string>('email', { default: '' });
+const name = ref('');
 const neighborhood = ref('');
 const numberAddress = ref('');
+const password = ref('');
+const password_confirmation = ref('');
+const remember = defineModel<boolean>('remember', { default: true });
+const router = useRouter();
+const state = ref('');
+const storage = createStorage(true);
 
 const passwordConfirmationError = ref('');
 const passwordError = ref('');
@@ -25,46 +26,11 @@ const cepError = ref('');
 const nameError = ref('');
 const emailError = ref('');
 
-
-const validateCepOnBlur = () => {
-  cep.value.length === 9 ?
-    (cepError.value = '') :
-    (cepError.value = 'Dado incompleto');
-};
-
 const cepMask = (value: string) => {
   if (!value) return '';
   value = value.replace(/\D/g, '');
   value = value.replace(/(\d)(\d{3})$/, '$1-$2');
   return value;
-}
-
-const handleCep = (event: Event) => {
-  const value = (event.target as HTMLInputElement).value;
-  cep.value = cepMask(value || '');
-};
-
-const handleNumberAddress = (event: Event) => {
-  const value = (event.target as HTMLInputElement).value;
-  numberAddress.value = value;
-};
-
-const searchCep = () => {
-  const formatedCep = cep.value.replace('-', '')
-  fetch(`https://viacep.com.br/ws/${formatedCep}/json/`).then((data) => data.json().then((json) => {
-    address.value = json.logradouro
-    state.value = json.uf
-    city.value = json.localidade
-    neighborhood.value = json.bairro
-  })).catch(() => cepError.value = "Cep inválido")
-}
-
-
-const validateEmailOnBlur = () => {
-  const re = /\S+@\S+\.\S+/;
-  re.test(email.value)
-    ? (emailError.value = '')
-    : (emailError.value = 'Insira um email válido');
 };
 
 const handleName = (event: Event) => {
@@ -90,6 +56,41 @@ const handlePasswordConfirmation = (event: Event) => {
   password_confirmation.value = value;
 };
 
+
+const handleCep = (event: Event) => {
+  const value = (event.target as HTMLInputElement).value;
+  cep.value = cepMask(value || '');
+};
+
+const handleNumberAddress = (event: Event) => {
+  const value = (event.target as HTMLInputElement).value;
+  numberAddress.value = value;
+};
+
+const searchCep = () => {
+  const formatedCep = cep.value.replace('-', '');
+  fetch(`https://viacep.com.br/ws/${formatedCep}/json/`)
+    .then((data) => data.json().then((json) => {
+      address.value = json.logradouro;
+      state.value = json.uf;
+      city.value = json.localidade;
+      neighborhood.value = json.bairro;
+    })).catch(() => cepError.value = "Cep inválido");
+};
+
+const validateCepOnBlur = () => {
+  cep.value.length === 9 ?
+    (cepError.value = '') :
+    (cepError.value = 'Dado incompleto');
+};
+
+const validateEmailOnBlur = () => {
+  const re = /\S+@\S+\.\S+/;
+  re.test(email.value)
+    ? (emailError.value = '')
+    : (emailError.value = 'Insira um email válido');
+};
+
 const validatepasswordOnBlur = () => {
   password.value.length < 6
     ? (passwordError.value = 'Mínimo de 6 caracteres')
@@ -103,25 +104,20 @@ const validatepasswordConfirmationOnBlur = () => {
 };
 
 const validateFields = () => {
-
   return passwordConfirmationError.value.length > 0 ||
-    passwordError.value.length > 0  ||
-    nameError.value.length > 0  ||
-    cepError.value.length > 0  ||
+    passwordError.value.length > 0 ||
+    nameError.value.length > 0 ||
+    cepError.value.length > 0 ||
     !cep.value ||
     !numberAddress.value ||
-    emailError.value.length > 0 
-
-}
+    emailError.value.length > 0;
+};
 
 const onSubmit = () => {
   if (validateFields()) {
-    Swal.fire({
-      title: `Preencha todos os campos corretamente`,
-      icon: 'error',
-      confirmButtonText: 'Ok'
-    });
-    return
+    Swal.fire({ title: `Preencha todos os campos corretamente`,
+      icon: 'error', confirmButtonText: 'Ok' });
+    return;
   }
   const buyer = {
     name: name.value,
@@ -132,17 +128,16 @@ const onSubmit = () => {
     neighborhood: neighborhood.value,
     numberAddress: numberAddress.value,
     cep: cep.value,
-  }
-  localStorage.setItem('buyer', JSON.stringify(buyer))
+  };
+  storage.store('buyer', JSON.stringify(buyer));
   const auth = new Auth(remember.value);
   awaiting.value = true;
-  auth.signUp(
-    email.value || '',
+  auth.signUp( email.value || '',
     password.value || '',
     password_confirmation.value || '',
     () => {
       awaiting.value = false;
-      router.push('/signIn')
+      router.push('/signIn');
     },
     () => {
       awaiting.value = false;
@@ -161,7 +156,10 @@ const onSubmit = () => {
           <form @submit.prevent="onSubmit">
             <div class="form-group">
               <label for="name">Nome</label>
-              <input @blur="handleName" type="text" class="form-control" id="name" :value="name">
+              <input
+               @blur="handleName" 
+               type="text" class="form-control"
+                id="name" :value="name">
               <div class="div-error">
                 <span v-if="nameError" class="error">{{ nameError }}</span>
               </div>
@@ -170,9 +168,18 @@ const onSubmit = () => {
               <div class="form-group col-md-6">
                 <label for="cep">CEP</label>
                 <div class="input-group">
-                  <input @blur="validateCepOnBlur" @input="handleCep" type="text" class="form-control" id="cep" placeholder="Digite o CEP" :value="cep">
+                  <input 
+                  @blur="validateCepOnBlur"
+                   @input="handleCep"
+                    type="text"
+                     class="form-control"
+                      id="cep" placeholder="Digite o CEP" 
+                      :value="cep">
                   <div class="input-group-append">
-                    <button @click.prevent="searchCep" class="btn btn-outline-secondary" id="cep-search">
+                    <button
+                     @click.prevent="searchCep"
+                      class="btn btn-outline-secondary" 
+                      id="cep-search">
                       <i class="fa fa-search"></i>
                     </button>
                   </div>
@@ -183,52 +190,100 @@ const onSubmit = () => {
               </div>
               <div class="form-group col-md-6">
                 <label for="city">Cidade</label>
-                <input type="text" class="form-control" id="city" :value="city" readonly>
+                <input
+                 type="text" 
+                 class="form-control" 
+                 id="city" 
+                 :value="city" 
+                 readonly
+                 >
               </div>
             </div>
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="state">Estado</label>
-                <input type="text" class="form-control" id="state" :value="state" readonly>
+                <input 
+                type="text"
+                 class="form-control" 
+                 id="state" 
+                 :value="state" 
+                 readonly>
               </div>
               <div class="form-group col-md-6">
                 <label for="address">Endereço</label>
-                <input type="text" class="form-control" id="address" :value="address" readonly>
+                <input
+                 type="text"
+                  class="form-control" 
+                  id="address" 
+                  :value="address"
+                   readonly>
               </div>
             </div>
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="neighborhood">Bairro</label>
-                <input type="text" class="form-control" id="neighborhood" :value="neighborhood" readonly>
+                <input 
+                type="text"
+                 class="form-control" 
+                 id="neighborhood" 
+                 :value="neighborhood" 
+                 readonly>
               </div>
               <div class="form-group col-md-6">
                 <label for="numberAddress">Número</label>
-                <input @change="handleNumberAddress" type="text" class="form-control" id="numberAddress" :value="numberAddress">
+                <input 
+                @change="handleNumberAddress"
+                 type="text"
+                  class="form-control"
+                  id="numberAddress"
+                   :value="numberAddress">
               </div>
             </div>
             <div class="form-group">
               <label for="email">Email</label>
-              <input @input="handleEmail" @blur="validateEmailOnBlur" type="email" class="form-control" id="email" :value="email">
+              <input
+               @input="handleEmail"
+                @blur="validateEmailOnBlur" 
+                type="email" 
+                class="form-control"
+                 id="email" 
+                 :value="email">
               <div class="div-error">
                 <span v-if="emailError" class="error">{{ emailError }}</span>
               </div>
             </div>
             <div class="form-group">
               <label for="password">Senha</label>
-              <input @blur="validatepasswordOnBlur" @change="handlePassword" type="password" class="form-control" id="password" :value="password">
+              <input
+              @blur="validatepasswordOnBlur" 
+              @change="handlePassword"
+               type="password" 
+              class="form-control" 
+              id="password" :value="password">
             </div>
             <div class="form-group">
               <label for="password_confirmation">Repetir a senha</label>
-              <input @input="handlePasswordConfirmation" @blur="validatepasswordConfirmationOnBlur"  type="password" class="form-control" id="password_confirmation" :value="password_confirmation">
+              <input
+               @input="handlePasswordConfirmation"
+                @blur="validatepasswordConfirmationOnBlur" 
+                 type="password" class="form-control" 
+                 id="password_confirmation"
+                  :value="password_confirmation">
               <div class="div-error">
-                <span v-if="passwordConfirmationError" class="error">{{ passwordConfirmationError }}</span>
+                <span 
+                v-if="passwordConfirmationError" 
+                class="error">{{ passwordConfirmationError }}</span>
               </div>
             </div>
             <div class="form-group form-check">
-              <input v-model="remember" type="checkbox" class="form-check-input" id="remember">
+              <input 
+              v-model="remember" type="checkbox" 
+              class="form-check-input" id="remember">
               <label class="form-check-label" for="remember">Remember Me</label>
             </div>
-            <button type="submit" class="btn btn-primary btn-block" v-show="!awaiting">Registrar</button>
+            <button type="submit"
+             class="btn btn-primary btn-block"
+             v-show="!awaiting">Registrar</button>
           </form>
           <div class="text-center mt-3">
             <p>
