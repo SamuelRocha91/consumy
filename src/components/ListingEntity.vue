@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { catergoriesProducts , categories} from '@/utils/data';
 
 const { entity, pagination } = defineProps<{
   entity: any,
@@ -29,7 +30,7 @@ const searchProducts = (id: number) => {
         <input
           id="search-item"
           class="form-control bg-input-2"
-          placeholder="Busque pelo nome da loja"
+          placeholder="Busque pelo nome"
           type="search"
           v-model="searchQuery"
           @input="search"
@@ -41,10 +42,22 @@ const searchProducts = (id: number) => {
           class="form-control select-box-2"
           v-model="selectedCategory"
           @change="search"
-
+          v-if="route.path !== '/dashboard/stores'" 
         >
           <option value="" disabled selected>Filtrar por categoria</option>
-          <option value="categoria">Categoria</option>
+          <option v-for="(category, index) in catergoriesProducts "
+           :value="category" :key="index">{{ category }}</option>
+        </select>
+         <select
+          id="category-filter"
+          class="form-control select-box-2"
+          v-model="selectedCategory"
+          @change="search"
+          v-if="route.path == '/dashboard/stores'" 
+        >
+          <option value="" disabled selected>Filtrar por categoria</option>
+          <option v-for="(category, index) in categories"
+           :value="category" :key="index">{{ category }}</option>
         </select>
       </div>
     </div>
@@ -64,13 +77,18 @@ const searchProducts = (id: number) => {
             <p v-if="route.path !== '/dashboard/stores'" class="card-text">
               <strong>Preço:</strong> {{ data.price }}
             </p>
-            <p v-if="route.path !== '/dashboard/stores'" class="card-text">
-              <strong>Quantidade:</strong> 
-              <select v-model="data.quantity" id="">
-                <option v-for="n in 9" :value="n" :key="n">{{ n }}</option>
-              </select>
-            </p>
-            <p class="card-text"><strong>Distância:</strong>2 km</p>
+            <p v-if="route.path !== '/dashboard/stores'" 
+            class="card-text quantity-select-container">
+                <strong>Quantidade:</strong> 
+                <select v-model="data.quantity"
+                 class="form-select form-select-sm quantity-select" 
+                 id="quantitySelect">
+                  <option v-for="n in 9" :value="n" :key="n">{{ n }}</option>
+                </select>
+              </p>
+            <p v-if="route.path == '/dashboard/stores'"
+            class="card-text">
+            <strong>Distância:</strong>2 km</p>
             <a 
             v-if="route.path == '/dashboard/stores'"
              @click="searchProducts(data.id)"
@@ -162,4 +180,15 @@ const searchProducts = (id: number) => {
   height: 200px;
   object-fit: cover;
 }
+
+ .quantity-select-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+  }
+  .quantity-select {
+    width: auto; 
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 </style>

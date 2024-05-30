@@ -29,7 +29,7 @@ const changePage = (page: number) => {
 };
 
 const filteredStores = () => {
-  getlist(1, searchQuery.value, selectedCategory.value);
+  getlist(1, searchQuery.value.toLocaleLowerCase(), selectedCategory.value);
 };
 
 const getlist = (page: number, search = '', category = '') => {

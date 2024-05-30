@@ -12,6 +12,9 @@ class StoreService extends BaseService{
     searchQuery = '',
     category = '',
   ) {
+    if (searchQuery == "Todos") {
+      searchQuery = '';
+    }
     const response = await this
       .getAll(
         `stores?page=${page}&name=${searchQuery}&category=${category}`

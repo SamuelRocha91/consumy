@@ -15,6 +15,9 @@ class ProductService extends BaseService{
     searchQuery = '',
     category = '',
   ) {
+    if (searchQuery == "Todos") {
+      searchQuery = '';
+    }
     const response = await this
       .getAll
       (

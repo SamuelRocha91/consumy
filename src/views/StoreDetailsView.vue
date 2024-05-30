@@ -74,7 +74,7 @@ const removeProductsInCart = (id: number) => {
 };
 
 const filteredStores = () => {
-  getlist(1, searchQuery.value, selectedCategory.value);
+  getlist(1, searchQuery.value.toLocaleLowerCase(), selectedCategory.value);
 };
 
 const debouncedSearch = debounce(filteredStores, 300);
