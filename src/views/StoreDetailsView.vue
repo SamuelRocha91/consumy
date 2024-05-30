@@ -7,6 +7,8 @@ import { ProductService } from '@/api/productService';
 import { useRoute } from 'vue-router';
 import Swal from 'sweetalert2';
 import { useSharedRefs } from '@/utils/useSharedRefs';
+import { createStorage } from '@/utils/storage';
+
 
 const cartIds = ref<any>([]);
 const pagination = ref({
@@ -22,6 +24,7 @@ const route = useRoute();
 const searchQuery = defineModel('searchQuery', { default: '' });
 const selectedCategory = defineModel('selectedCategory', { default: '' });
 const storeId = ref(route.params.id);
+const storage = createStorage(true);
 
 const addProductsInCart = (id: number, selectQuantity: string) => {
   if (!selectQuantity) {
@@ -30,8 +33,8 @@ const addProductsInCart = (id: number, selectQuantity: string) => {
     );
     return;
   }
-  const data = localStorage.getItem('cart') || '';
-  const dataParsed = data ? JSON.parse(data) : [];
+  const data = storage.get('cart') || '[]';
+  const dataParsed = JSON.parse(data);
   const product = products.value.find((product: any) => product.id === id);
   const index = products.value.findIndex((product: any) => product.id === id);
 
@@ -41,7 +44,7 @@ const addProductsInCart = (id: number, selectQuantity: string) => {
     quantity: selectQuantity,
   };
   dataParsed.push(newObjectCart);
-  localStorage.setItem('cart', JSON.stringify(dataParsed));
+  storage.store('cart', JSON.stringify(dataParsed));
   cartIds.value.push(id);
   products.value[index].inCart = true;
   quantity.value = dataParsed.length;
@@ -54,10 +57,10 @@ const changePage = (page: any) => {
 };
 
 const removeProductsInCart = (id: number) => {
-  const data = localStorage.getItem('cart') || '';
-  const dataParsed = data ? JSON.parse(data) : [];
+  const data = storage.get('cart') || '[]';
+  const dataParsed = JSON.parse(data);
   const filterProduct = dataParsed.filter((product: any) => product.id !== id);
-  localStorage.setItem('cart', JSON.stringify(filterProduct));
+  storage.store('cart', JSON.stringify(filterProduct));
   const indexProduct = products.value
     .findIndex((product: any) => product.id === id);
   products.value[indexProduct].inCart = false;
