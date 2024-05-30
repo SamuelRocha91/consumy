@@ -8,8 +8,12 @@ import { useRoute } from 'vue-router';
 import Swal from 'sweetalert2';
 import { useSharedRefs } from '@/utils/useSharedRefs';
 import { createStorage } from '@/utils/storage';
+import {
+  type dataProductsRequest,
+  type productType
+} from '@/types/productTypes';
 
-const cartIds = ref<any>([]);
+const cartIds = ref<number[]>([]);
 const pagination = ref({
   current: 1,
   next: 0,
@@ -17,7 +21,7 @@ const pagination = ref({
   pages: 0
 });
 const productsService = new ProductService();
-const products = ref<any>([]);
+const products = ref<productType[]>([]);
 const quantity = useSharedRefs().quantity;
 const route = useRoute();
 const searchQuery = defineModel('searchQuery', { default: '' });
@@ -46,10 +50,10 @@ const addProductsInCart = (id: number, selectQuantity: string) => {
   storage.store('cart', JSON.stringify(dataParsed));
   cartIds.value.push(id);
   products.value[index].inCart = true;
-  quantity.value = dataParsed.length;
+  quantity.value += Number(selectQuantity);
 };
 
-const changePage = (page: any) => {
+const changePage = (page: number) => {
   if (page > 0 && page <= pagination.value.pages) {
     getlist(page);
   }
@@ -65,12 +69,12 @@ const removeProductsInCart = (id: number) => {
   products.value[indexProduct].inCart = false;
 
   const index = cartIds.value.findIndex((element: number) => element === id);
+  quantity.value -= products.value[indexProduct].quantity || 0;
   cartIds.value.splice(index, 1);
-  quantity.value = cartIds.value.length;
 };
 
 const filteredStores = () => {
-  getlist(1, searchQuery.value, selectedCategory.value);
+  getlist(1, searchQuery.value.toLocaleLowerCase(), selectedCategory.value);
 };
 
 const debouncedSearch = debounce(filteredStores, 300);
@@ -78,7 +82,8 @@ const debouncedSearch = debounce(filteredStores, 300);
 const getlist = (page: number, search = '', category = '') => {
   productsService.getProducts(
     Number(storeId.value),
-    (data: any) => {
+    (data: dataProductsRequest) => {
+      console.log(data);
       products.value = data.result.products.map((product: any) => ({
         ...product,
         src: product.image_url,
@@ -86,10 +91,10 @@ const getlist = (page: number, search = '', category = '') => {
         inCart: cartIds.value.some((id: number) => id == product.id),
         quantity: 1
       }));
-      pagination.value.next = data.pagination.next || 1;
-      pagination.value.previous = data.pagination.previous || 1;
-      pagination.value.previous = data.pagination.pages;
-      pagination.value.current = data.pagination.current;
+      pagination.value.next = data.result.pagination.next || 1;
+      pagination.value.pages = data.result.pagination.pages;
+      pagination.value.current = data.result.pagination.current || 1;
+      pagination.value.previous = data.result.pagination.previous || 1;
     },
     (error: any) => {
       console.error('Request failed:', error);
@@ -107,7 +112,8 @@ onMounted(() => {
   parseCart.forEach((product: any) => {
     cartIds.value.push(product.id);
   });
-  quantity.value = cartIds.value.length;
+  quantity.value = parseCart
+    .reduce((acc: any, curr: any) => acc + curr.quantity, 0);;
   getlist(1);
 });
 </script>

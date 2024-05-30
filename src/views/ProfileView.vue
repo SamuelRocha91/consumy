@@ -24,7 +24,8 @@ onMounted(() => {
   const data = storage.get('cart') || '[]';
   const dataParsed = JSON.parse(data);
   if (dataParsed) {
-    quantity.value = dataParsed.length;
+    quantity.value = dataParsed
+      .reduce((acc: any, curr: any) => acc + curr.quantity, 0);;
   }
 });
 </script>

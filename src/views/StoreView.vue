@@ -7,6 +7,7 @@ import debounce from 'lodash/debounce';
 import { useSharedRefs } from '@/utils/useSharedRefs';
 import { createStorage } from '@/utils/storage';
 import Swal from 'sweetalert2';
+import type { dataStoreRequest, storeRequest } from '@/types/storeTypes';
 
 const pagination = ref({
   current: 1,
@@ -18,31 +19,31 @@ const quantity = useSharedRefs().quantity;
 const searchQuery = defineModel('searchQuery', { default: '' });
 const selectedCategory = defineModel('selectedCategory', { default: '' });
 const storeService = new StoreService();
-const stores = ref<any>([]);
+const stores = ref<storeRequest[]>([]);
 const storage = createStorage(true);
 
-const changePage = (page: any) => {
+const changePage = (page: number) => {
   if (page > 0 && page <= pagination.value.pages) {
     getlist(page);
   }
 };
 
 const filteredStores = () => {
-  getlist(1, searchQuery.value, selectedCategory.value);
+  getlist(1, searchQuery.value.toLocaleLowerCase(), selectedCategory.value);
 };
 
 const getlist = (page: number, search = '', category = '') => {
   storeService.getStores(
     page,
-    (data: any) => {
+    (data: dataStoreRequest) => {
       stores.value = data.result.stores.map((store: any) => ({
         ...store,
         src: store.avatar_url,
       }));
-      pagination.value.next = data.pagination.next ? data.pagination.next : 1;
-      pagination.value.previous = data.pagination.previous || 1;
-      pagination.value.previous = data.pagination.pages;
-      pagination.value.current = data.pagination.current;
+      pagination.value.next = data.result.pagination.next || 1;
+      pagination.value.previous = data.result.pagination.previous || 1;
+      pagination.value.pages = data.result.pagination.pages;
+      pagination.value.current = data.result.pagination.current || 1;
     },
     (erro: any) => {
       console.error('Request failed:', erro);
@@ -59,7 +60,8 @@ onMounted(() => {
   const data = storage.get('cart') || '[]';
   const dataParsed = JSON.parse(data);
   if (dataParsed) {
-    quantity.value = dataParsed.length;
+    quantity.value = dataParsed
+      .reduce((acc: any, curr: any) => acc + curr.quantity, 0);
   }
   getlist(1);
 });
