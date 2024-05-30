@@ -1,30 +1,32 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-import { ref } from 'vue'
-import { Auth } from '../utils/auth'
+import { useRouter } from 'vue-router';
+import { ref } from 'vue';
+import { Auth } from '../utils/auth';
+import Swal from 'sweetalert2';
 
-const router = useRouter()
-const email = defineModel<string>('email')
-const password = defineModel<string>('password')
-const awaiting = ref(false)
-const remember = defineModel<boolean>('remember', { default: true })
+const awaiting = ref(false);
+const email = defineModel<string>('email');
+const password = defineModel<string>('password');
+const remember = defineModel<boolean>('remember', { default: true });
+const router = useRouter();
 
-function onSubmit() {
-  let auth = new Auth(remember.value)
-  awaiting.value = true
+const onSubmit = () => {
+  let auth = new Auth(remember.value);
+  awaiting.value = true;
   auth.signIn(
     email.value || '',
     password.value || '',
     () => {
-      awaiting.value = false
-      router.push('/dashboard')
+      awaiting.value = false;
+      router.push('/dashboard');
     },
-    () => {
-      awaiting.value = false
-      console.log('não foi dessa vez!')
+    (erro: any) => {
+      awaiting.value = false;
+      console.error('Request failed:', erro);
+      Swal.fire('Falha ao tentar fazer login. Favor, verifique seus dados');
     }
-  )
-}
+  );
+};
 </script>
 <template>
   <div class="form-content">
@@ -39,7 +41,13 @@ function onSubmit() {
           <label>Remember Me: </label>
           <input v-model="remember" type="checkbox" /><br />
         </div>
-        <button type="submit" class="btn btn-primary btn-block" v-show="!awaiting">Sign In</button>
+        <button
+         type="submit" 
+         class="btn btn-primary btn-block" 
+         v-show="!awaiting"
+         >
+         Sign In
+        </button>
       </form>
         <div class="text-center mt-3">
             <p>

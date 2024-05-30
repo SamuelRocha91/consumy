@@ -4,63 +4,65 @@ import ListingStores from '@/components/ListingEntity.vue';
 import { onMounted, ref } from 'vue';
 import { StoreService } from '@/api/storeService';
 import debounce from 'lodash/debounce';
+import { useSharedRefs } from '@/utils/useSharedRefs';
+import { createStorage } from '@/utils/storage';
+import Swal from 'sweetalert2';
 
-const quantity = ref(0);
-const storeService = new StoreService();
-const stores = ref<any>([])
 const pagination = ref({
   current: 1,
   next: 0,
   previous: 0,
   pages: 0
-})
+});
+const quantity = useSharedRefs().quantity;
+const searchQuery = defineModel('searchQuery', { default: '' });
+const selectedCategory = defineModel('selectedCategory', { default: '' });
+const storeService = new StoreService();
+const stores = ref<any>([]);
+const storage = createStorage(true);
 
 const changePage = (page: any) => {
   if (page > 0 && page <= pagination.value.pages) {
-    getlist(page)
+    getlist(page);
   }
 };
 
-const searchQuery = defineModel('searchQuery', { default: '' })
-const selectedCategory = defineModel('selectedCategory', {default: ''})
-
 const filteredStores = () => {
-  getlist(1, searchQuery.value, selectedCategory.value)
+  getlist(1, searchQuery.value, selectedCategory.value);
 };
 
-const debouncedSearch = debounce(filteredStores, 300);
-
 const getlist = (page: number, search = '', category = '') => {
-   storeService.getStores(
-        page,
-      (data: any) => {
-      console.log(data)
-        stores.value = data.result.stores.map((store: any) => ({
-          ...store,
-          src: store.avatar_url,
+  storeService.getStores(
+    page,
+    (data: any) => {
+      stores.value = data.result.stores.map((store: any) => ({
+        ...store,
+        src: store.avatar_url,
       }));
       pagination.value.next = data.pagination.next ? data.pagination.next : 1;
       pagination.value.previous = data.pagination.previous || 1;
       pagination.value.previous = data.pagination.pages;
       pagination.value.current = data.pagination.current;
+    },
+    (erro: any) => {
+      console.error('Request failed:', erro);
+      Swal.fire('Falha ao tentar carregar as lojas. Tente novamente');
+    },
+    search,
+    category
+  );
+};
 
-        } ,
-        () => {
-            console.log('falhoooooouuuu')
-     },
-     search,
-     category
-    ) 
-}
+const debouncedSearch = debounce(filteredStores, 300);
 
 onMounted(() => {
-   const products = localStorage.getItem('cart') || '';
-    const productsParsed = products ? JSON.parse(products) : '';
-    if (productsParsed) {
-        quantity.value = productsParsed.length;
-    }
+  const data = storage.get('cart') || '[]';
+  const dataParsed = JSON.parse(data);
+  if (dataParsed) {
+    quantity.value = dataParsed.length;
+  }
   getlist(1);
-})
+});
 </script>
 <template>
   <NavBar :quantity="quantity"/>
@@ -73,8 +75,7 @@ onMounted(() => {
    :search="debouncedSearch"
    v-model:searchQuery="searchQuery"
    v-model:selectedCategory="selectedCategory"
-      :removeProductsInCart="() => console.log('nada')"
-
+   :removeProductsInCart="() => console.log('nada')"
    />
 </template>
 

@@ -1,9 +1,9 @@
 /* eslint-env node */
-require('@rushstack/eslint-patch/modern-module-resolution')
+require('@rushstack/eslint-patch/modern-module-resolution');
 
 module.exports = {
   root: true,
-  'extends': [
+  extends: [
     'plugin:vue/vue3-essential',
     'eslint:recommended',
     '@vue/eslint-config-typescript',
@@ -11,5 +11,13 @@ module.exports = {
   ],
   parserOptions: {
     ecmaVersion: 'latest'
+  },
+  rules: {
+    semi: ['error', 'always'],
+    indent: ['error', 2],
+    'no-multiple-empty-lines': ['error', { max: 2 }],
+    'max-len': ['error', { code: 80 }],
+    complexity: ['error', 10],
+    'max-lines-per-function': ['error', { max: 30 }],
   }
-}
+};

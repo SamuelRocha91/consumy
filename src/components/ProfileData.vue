@@ -1,33 +1,35 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
+import { createStorage } from '@/utils/storage';
 
-const email = defineModel<string>('email', { default: '' })
-const cep = ref('');
-const name = ref('');
-const state = ref('');
-const city = ref('');
 const address = ref('');
+const cep = ref('');
+const city = ref('');
+const email = defineModel<string>('email', { default: '' });
+const name = ref('');
 const neighborhood = ref('');
 const numberAddress = ref('');
+const state = ref('');
+const storage = createStorage(true);
 
 defineProps<{
     handleClick: (param?: string) => void;
 }>();
 
 onMounted(() => {
-    const user = localStorage.getItem('buyer') || '';
-    const parseUser = user ? JSON.parse(user) : '';
-    if (parseUser) {
-        email.value = parseUser.email;
-        name.value = parseUser.name
-        cep.value = parseUser.cep
-        state.value = parseUser.state
-        city.value = parseUser.city
-        address.value = parseUser.address
-        neighborhood.value = parseUser.neighborhood
-        numberAddress.value = parseUser.numberAddress
-    }
-})
+  const localBuyer = storage.get('buyer') || '[]';
+  const parsedBuyer = JSON.parse(localBuyer);
+  if (parsedBuyer) {
+    email.value = parsedBuyer.email;
+    name.value = parsedBuyer.name;
+    cep.value = parsedBuyer.cep;
+    state.value = parsedBuyer.state;
+    city.value = parsedBuyer.city;
+    address.value = parsedBuyer.address;
+    neighborhood.value = parsedBuyer.neighborhood;
+    numberAddress.value = parsedBuyer.numberAddress;
+  }
+});
 </script>
 <template>
     <div class="container mt-5">
@@ -39,40 +41,78 @@ onMounted(() => {
                 <form>
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" class="form-control" id="name" :value="name" readonly>
+                        <input 
+                        type="text" 
+                        class="form-control" id="name" :value="name" readonly>
                     </div>
                     <div class="form-group">
                         <label for="cep">CEP</label>
-                        <input type="text" class="form-control" id="cep" :value="cep" readonly>
+                        <input
+                         type="text"
+                          class="form-control" 
+                          id="cep" :value="cep" readonly>
                     </div>
                     <div class="form-group">
                         <label for="state">State</label>
-                        <input type="text" class="form-control" id="state" :value="state" readonly>
+                        <input
+                         type="text"
+                         class="form-control"
+                         id="state" :value="state" 
+                        readonly>
                     </div>
                     <div class="form-group">
                         <label for="city">City</label>
-                        <input type="text" class="form-control" id="city" :value="city" readonly>
+                        <input
+                         type="text"
+                         class="form-control" 
+                         id="city"
+                         :value="city" 
+                         readonly>
                     </div>
                     <div class="form-group">
                         <label for="address">Address</label>
-                        <input type="text" class="form-control" id="address" :value="address" readonly>
+                        <input 
+                        type="text" 
+                        class="form-control" 
+                        id="address" :value="address" 
+                        readonly
+                        >
                     </div>
                     <div class="form-group">
                         <label for="name">numberAddress</label>
-                        <input type="text" class="form-control" id="name" :value="numberAddress" readonly>
+                        <input 
+                        type="text"
+                        class="form-control"
+                        id="name" :value="numberAddress"
+                        readonly
+                        >
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" :value="email" readonly>
+                        <input 
+                        type="email"
+                        class="form-control" 
+                        id="email" :value="email" 
+                        readonly>
                     </div>
                     <div class="form-group">
                         <label for="email">neighborhood</label>
-                        <input type="email" class="form-control" id="email" :value="neighborhood" readonly>
+                        <input type="email" 
+                        class="form-control" 
+                        id="email" :value="neighborhood" 
+                        readonly>
                     </div>
                     <div class="form-group text-center">
-                        <button @click.prevent="handleClick()" type="button" class="btn btn-primary mr-2">Alterar
+                        <button
+                         @click.prevent="handleClick()" 
+                         type="button"
+                         class="btn btn-primary mr-2"
+                         >
+                         Alterar
                             Dados</button>
-                        <button @click.prevent="handleClick('password')" type="button" class="btn btn-secondary">Alterar
+                        <button 
+                        @click.prevent="handleClick('password')" type="button" 
+                        class="btn btn-secondary">Alterar
                             Senha</button>
                     </div>
                 </form>

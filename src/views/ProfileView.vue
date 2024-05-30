@@ -3,31 +3,37 @@ import { ref, onMounted } from 'vue';
 import NavBar from '@/components/NavBar.vue';
 import ProfileData from '@/components/ProfileData.vue';
 import FormProfile from '@/components/FormProfile.vue';
+import { useSharedRefs } from '@/utils/useSharedRefs';
+import { createStorage } from '@/utils/storage';
 
 const isFormPassword = ref(false);
+const isEdit = ref(false);
+const quantity = useSharedRefs().quantity;
+const storage = createStorage(true);
 
 const managerPages = (param = 'update') => {
-  isEdit.value = !isEdit.value
+  isEdit.value = !isEdit.value;
   if (param == 'update') {
     isFormPassword.value = false;
   } else {
     isFormPassword.value = true;
   }
-}
-const isEdit = ref(false);
+};
 
-const quantity = ref(0);
 onMounted(() => {
-    const products = localStorage.getItem('cart') || '';
-    const productsParsed = products ? JSON.parse(products) : '';
-    if (productsParsed) {
-        quantity.value = productsParsed.length;
-    }
-})
+  const data = storage.get('cart') || '[]';
+  const dataParsed = JSON.parse(data);
+  if (dataParsed) {
+    quantity.value = dataParsed.length;
+  }
+});
 </script>
 <template>
   <NavBar :quantity="quantity"/>
-  <FormProfile :handleClick="managerPages" v-if="isEdit" :isFormPassword="isFormPassword" />
+  <FormProfile 
+  :handleClick="managerPages"
+   v-if="isEdit" :isFormPassword="isFormPassword"
+    />
   <ProfileData v-else :handleClick="managerPages" />
 </template>
 

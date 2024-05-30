@@ -1,69 +1,67 @@
-import { createStorage, type SimpleStorage } from './storage'
-import Swal from 'sweetalert2'
+import { createStorage, type SimpleStorage } from './storage';
 
 class Auth {
-  private storage: SimpleStorage
+  private storage: SimpleStorage;
   static URL = import.meta.env.VITE_BASE_URL;
   static X_API_KEY = import.meta.env.VITE_X_API_KEY;
 
   constructor(persistent = false) {
-    this.storage = createStorage(persistent)
+    this.storage = createStorage(persistent);
   }
 
   private getFallback(key: string): string | null {
-    const transient = createStorage(false)
-    const persistent = createStorage(true)
-    return transient.get(key) || persistent.get(key)
+    const transient = createStorage(false);
+    const persistent = createStorage(true);
+    return transient.get(key) || persistent.get(key);
   }
 
   success(response: Response, onSuccess: () => void) {
     response.json().then((json) => {
-      this.storage.store('token', json.token)
-      this.storage.store('email', json.email)
-      onSuccess()
-    })
+      this.storage.store('token', json.token);
+      this.storage.store('email', json.email);
+      onSuccess();
+    });
   }
 
-  failure(response: Response, onFailure: () => void) {
-    onFailure()
-    Swal.fire({
-      title: `${response.status}`,
-      text: `${response.statusText}`,
-      icon: 'error',
-      confirmButtonText: 'Cool'
-    })
+  failure(response: Response, onFailure: (data?: any) => void) {
+    response.json().then((erro: any) => onFailure(erro)); 
   }
 
   currentUser() {
     if (!this.isLoggedIn()) {
-      return null
+      return null;
     }
     return {
       email: this.getFallback('email')
-    }
+    };
   }
 
   isLoggedIn() {
-    return Boolean(this.getFallback('token'))
+    return Boolean(this.getFallback('token'));
   }
 
   signOut(andThen = () => { }) {
-    const transient = createStorage(false)
-    const persistent = createStorage(true)
-    transient.remove('token')
-    transient.remove('email')
-    persistent.remove('token')
-    persistent.remove('email')
-    andThen()
+    const transient = createStorage(false);
+    const persistent = createStorage(true);
+    transient.remove('token');
+    transient.remove('email');
+    persistent.remove('token');
+    persistent.remove('email');
+    andThen();
   }
 
-  async signIn(email: string, password: string, onSuccess: () => void, onFailure: () => void) {
+  async signIn(
+    email: string,
+    password: string,
+    onSuccess: () => void,
+    onFailure: (data?: any) => void
+  ) {
     const body = {
       login: {
         email: email,
         password: password
       }
-    }
+    };
     fetch(`${Auth.URL}/sign_in`, {
       method: "POST",
       headers: {
@@ -74,11 +72,11 @@ class Auth {
       body: JSON.stringify(body)
     }).then((response) => {
       if (response.ok) {
-        this.success(response, onSuccess)
+        this.success(response, onSuccess);
       } else {
-        this.failure(response, onFailure)
+        this.failure(response, onFailure);
       }
-    })
+    });
   }
 
   async signUp(
@@ -113,4 +111,4 @@ class Auth {
   }
   
 }
-export { Auth }
+export { Auth };
