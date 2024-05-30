@@ -50,7 +50,7 @@ const addProductsInCart = (id: number, selectQuantity: string) => {
   storage.store('cart', JSON.stringify(dataParsed));
   cartIds.value.push(id);
   products.value[index].inCart = true;
-  quantity.value = dataParsed.length;
+  quantity.value += Number(selectQuantity);
 };
 
 const changePage = (page: number) => {
@@ -69,8 +69,8 @@ const removeProductsInCart = (id: number) => {
   products.value[indexProduct].inCart = false;
 
   const index = cartIds.value.findIndex((element: number) => element === id);
+  quantity.value -= products.value[indexProduct].quantity || 0;
   cartIds.value.splice(index, 1);
-  quantity.value = cartIds.value.length;
 };
 
 const filteredStores = () => {
@@ -112,7 +112,8 @@ onMounted(() => {
   parseCart.forEach((product: any) => {
     cartIds.value.push(product.id);
   });
-  quantity.value = cartIds.value.length;
+  quantity.value = parseCart
+    .reduce((acc: any, curr: any) => acc + curr.quantity, 0);;
   getlist(1);
 });
 </script>

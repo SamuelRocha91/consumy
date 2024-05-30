@@ -31,7 +31,8 @@ onMounted(() => {
   const dataParsed = JSON.parse(data);
   if (dataParsed) {
     cart.value = dataParsed;
-    quantity.value = dataParsed.length;
+    quantity.value = dataParsed
+      .reduce((acc: any, curr: any) => acc + curr.quantity, 0);
     dataParsed.forEach((product: any) => {
       for (let i = 0; i < product.quantity; i += 1) {
         arrayPrices.push(product.price);
