@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
+import { createStorage } from '@/utils/storage';
 
 const { handleClick } = defineProps<{
     handleClick: (param?: string) => void;
@@ -7,27 +8,45 @@ const { handleClick } = defineProps<{
 
 }>();
 
-const email = defineModel<string>('email', { default: '' });
-const password = ref('');
-const password_confirmation = ref('');
-const cep = ref('');
-const name = ref('');
-const state = ref('');
-const city = ref('');
 const address = ref('');
+const cep = ref('');
+const city = ref('');
+const email = defineModel<string>('email', { default: '' });
+const name = ref('');
 const neighborhood = ref('');
 const numberAddress = ref('');
+const password = ref('');
+const password_confirmation = ref('');
+const state = ref('');
+const storage = createStorage(true);
 
+const cepError = ref('');
+const nameError = ref('');
 const emailError = ref('');
 const passwordConfirmationError = ref('');
 const passwordError = ref('');
 
-const cepError = ref('');
-const nameError = ref('');
+const handleCep = (event: Event) => {
+  const value = (event.target as HTMLInputElement).value;
+  cep.value = cepMask(value || '');
+};
 
 const handleEmail = (event: Event) => {
   const value = (event.target as HTMLInputElement).value;
   email.value = value;
+};
+
+const handleName = (event: Event) => {
+  const value = (event.target as HTMLInputElement).value;
+  name.value = value;
+  name.value.split(' ').length >= 2
+    ? (nameError.value = '')
+    : (nameError.value = 'Insira um nome válido');
+};
+
+const handleNumberAddress = (event: Event) => {
+  const value = (event.target as HTMLInputElement).value;
+  numberAddress.value = value;
 };
 
 const handlePassword = (event: Event) => {
@@ -38,6 +57,13 @@ const handlePassword = (event: Event) => {
 const handlePasswordConfirmation = (event: Event) => {
   const value = (event.target as HTMLInputElement).value;
   password_confirmation.value = value;
+};
+
+const validateEmailOnBlur = () => {
+  const re = /\S+@\S+\.\S+/;
+  re.test(email.value)
+    ? (emailError.value = '')
+    : (emailError.value = 'Insira um email válido');
 };
 
 const validatepasswordOnBlur = () => {
@@ -58,11 +84,6 @@ const validateCepOnBlur = () => {
     (cepError.value = 'Dado incompleto');
 };
 
-const handleNumberAddress = (event: Event) => {
-  const value = (event.target as HTMLInputElement).value;
-  numberAddress.value = value;
-};
-
 const cepMask = (value: string) => {
   if (!value) return '';
   value = value.replace(/\D/g, '');
@@ -70,29 +91,9 @@ const cepMask = (value: string) => {
   return value;
 };
 
-const validateEmailOnBlur = () => {
-  const re = /\S+@\S+\.\S+/;
-  re.test(email.value)
-    ? (emailError.value = '')
-    : (emailError.value = 'Insira um email válido');
-};
-
-const handleCep = (event: Event) => {
-  const value = (event.target as HTMLInputElement).value;
-  cep.value = cepMask(value || '');
-};
-
-const handleName = (event: Event) => {
-  const value = (event.target as HTMLInputElement).value;
-  name.value = value;
-  name.value.split(' ').length >= 2
-    ? (nameError.value = '')
-    : (nameError.value = 'Insira um nome válido');
-};
-
 const saveData = () => {
-  const localBuyer = localStorage.getItem('buyer') || '';
-  const parsedBuyer = localBuyer ? JSON.parse(localBuyer) : '';
+  const localBuyer = storage.get('buyer') || '[]';
+  const parsedBuyer = JSON.parse(localBuyer);
   if (parsedBuyer) {
     const buyer = {
       name: name.value,
@@ -104,7 +105,7 @@ const saveData = () => {
       numberAddress: numberAddress.value,
       cep: cep.value,
     };
-    localStorage.setItem('buyer', JSON.stringify(buyer));
+    storage.store('buyer', JSON.stringify(buyer));
   };
   handleClick();
 };
@@ -125,16 +126,16 @@ const searchCep = () => {
 };
 
 onMounted(() => {
-  const user = localStorage.getItem('buyer') || '';
-  const parseUser = user ? JSON.parse(user) : '';
-  if (parseUser) {
-    name.value = parseUser.name;
-    cep.value = parseUser.cep;
-    state.value = parseUser.state;
-    city.value = parseUser.city;
-    address.value = parseUser.address;
-    neighborhood.value = parseUser.neighborhood;
-    numberAddress.value = parseUser.numberAddress;
+  const localBuyer = storage.get('buyer') || '[]';
+  const parsedBuyer = JSON.parse(localBuyer);
+  if (parsedBuyer) {
+    name.value = parsedBuyer.name;
+    cep.value = parsedBuyer.cep;
+    state.value = parsedBuyer.state;
+    city.value = parsedBuyer.city;
+    address.value = parsedBuyer.address;
+    neighborhood.value = parsedBuyer.neighborhood;
+    numberAddress.value = parsedBuyer.numberAddress;
   }
 });
 </script>
