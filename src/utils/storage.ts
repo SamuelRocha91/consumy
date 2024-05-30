@@ -6,30 +6,30 @@ interface SimpleStorage {
 
 class PersistentStorage implements SimpleStorage {
   store(key: string, value: string) {
-    localStorage.setItem(key, value)
+    localStorage.setItem(key, value);
   }
   get(key: string) {
-    return localStorage.getItem(key)
+    return localStorage.getItem(key);
   }
   remove(key: string) {
-    localStorage.removeItem(key)
+    localStorage.removeItem(key);
   }
 }
 
 class TransientStorage implements SimpleStorage {
   store(key: string, value: string) {
-    sessionStorage.setItem(key, value)
+    sessionStorage.setItem(key, value);
   }
   get(key: string) {
-    return sessionStorage.getItem(key)
+    return sessionStorage.getItem(key);
   }
   remove(key: string) {
-    sessionStorage.removeItem(key)
+    sessionStorage.removeItem(key);
   }
 }
 
 function createStorage(persistent: boolean): SimpleStorage {
-  return persistent ? new PersistentStorage() : new TransientStorage()
+  return persistent ? new PersistentStorage() : new TransientStorage();
 }
 
-export { createStorage, type SimpleStorage }
+export { createStorage, type SimpleStorage };

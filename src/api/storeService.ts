@@ -8,11 +8,14 @@ class StoreService extends BaseService{
   async getStores(
     page: number,
     onSuccess: (data: any) => void,
-    onFailure: () => void,
+    onFailure: (data: any) => void,
     searchQuery = '',
     category = '',
   ) {
-    const response = await this.getAll(`stores?page=${page}&name=${searchQuery}&category=${category}`);
+    const response = await this
+      .getAll(
+        `stores?page=${page}&name=${searchQuery}&category=${category}`
+      );
     if (response.ok) {
       this.success(response, onSuccess);
     } else {
@@ -20,17 +23,17 @@ class StoreService extends BaseService{
     }
   }
 
-  failure(response: Response, onFailure: () => void) {
-    onFailure();
+  failure(response: Response, onFailure: (data: any) => void) {
+    response.json().then((erro: any) => onFailure(erro));
   }
 
   success(
     response: Response,
     onSuccess: (data?: any) => void,
   ) {
-      response.json().then((json) => {
-        onSuccess(json);
-      });
+    response.json().then((json) => {
+      onSuccess(json);
+    });
   }
 
 }

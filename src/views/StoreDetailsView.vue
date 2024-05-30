@@ -91,7 +91,7 @@ const getlist = (page: number, search = '', category = '') => {
     },
     (error: any) => {
       console.error('Request failed:', error);
-      Swal.fire('Falha ao tentar carregar os produtos. Tente novamente')
+      Swal.fire('Falha ao tentar carregar os produtos. Tente novamente');
     },
     page,
     search,
