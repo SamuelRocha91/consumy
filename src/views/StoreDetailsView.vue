@@ -9,7 +9,6 @@ import Swal from 'sweetalert2';
 import { useSharedRefs } from '@/utils/useSharedRefs';
 import { createStorage } from '@/utils/storage';
 
-
 const cartIds = ref<any>([]);
 const pagination = ref({
   current: 1,

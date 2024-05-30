@@ -5,6 +5,7 @@ import { onMounted, ref } from 'vue';
 import { StoreService } from '@/api/storeService';
 import debounce from 'lodash/debounce';
 import { useSharedRefs } from '@/utils/useSharedRefs';
+import { createStorage } from '@/utils/storage';
 import Swal from 'sweetalert2';
 
 const pagination = ref({
@@ -18,6 +19,7 @@ const searchQuery = defineModel('searchQuery', { default: '' });
 const selectedCategory = defineModel('selectedCategory', { default: '' });
 const storeService = new StoreService();
 const stores = ref<any>([]);
+const storage = createStorage(true);
 
 const changePage = (page: any) => {
   if (page > 0 && page <= pagination.value.pages) {
@@ -54,10 +56,10 @@ const getlist = (page: number, search = '', category = '') => {
 const debouncedSearch = debounce(filteredStores, 300);
 
 onMounted(() => {
-  const products = localStorage.getItem('cart') || '';
-  const productsParsed = products ? JSON.parse(products) : '';
-  if (productsParsed) {
-    quantity.value = productsParsed.length;
+  const data = storage.get('cart') || '[]';
+  const dataParsed = JSON.parse(data);
+  if (dataParsed) {
+    quantity.value = dataParsed.length;
   }
   getlist(1);
 });
