@@ -97,7 +97,7 @@ const searchProducts = (id: number) => {
     </div>
 
     <nav>
-      <ul class="pagination">
+      <ul class="pagination justify-content-end">
         <li class="page-item" :class="{ disabled: currentPage === 1 }">
           <a 
           class="page-link" 

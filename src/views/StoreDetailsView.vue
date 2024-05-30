@@ -8,6 +8,10 @@ import { useRoute } from 'vue-router';
 import Swal from 'sweetalert2';
 import { useSharedRefs } from '@/utils/useSharedRefs';
 import { createStorage } from '@/utils/storage';
+import {
+  type dataProductsRequest,
+  type productType
+} from '@/types/productTypes';
 
 const cartIds = ref<any>([]);
 const pagination = ref({
@@ -17,7 +21,7 @@ const pagination = ref({
   pages: 0
 });
 const productsService = new ProductService();
-const products = ref<any>([]);
+const products = ref<productType[]>([]);
 const quantity = useSharedRefs().quantity;
 const route = useRoute();
 const searchQuery = defineModel('searchQuery', { default: '' });
@@ -49,7 +53,7 @@ const addProductsInCart = (id: number, selectQuantity: string) => {
   quantity.value = dataParsed.length;
 };
 
-const changePage = (page: any) => {
+const changePage = (page: number) => {
   if (page > 0 && page <= pagination.value.pages) {
     getlist(page);
   }
@@ -78,7 +82,8 @@ const debouncedSearch = debounce(filteredStores, 300);
 const getlist = (page: number, search = '', category = '') => {
   productsService.getProducts(
     Number(storeId.value),
-    (data: any) => {
+    (data: dataProductsRequest) => {
+      console.log(data);
       products.value = data.result.products.map((product: any) => ({
         ...product,
         src: product.image_url,
@@ -86,10 +91,10 @@ const getlist = (page: number, search = '', category = '') => {
         inCart: cartIds.value.some((id: number) => id == product.id),
         quantity: 1
       }));
-      pagination.value.next = data.pagination.next || 1;
-      pagination.value.previous = data.pagination.previous || 1;
-      pagination.value.previous = data.pagination.pages;
-      pagination.value.current = data.pagination.current;
+      pagination.value.next = data.result.pagination.next || 1;
+      pagination.value.pages = data.result.pagination.pages;
+      pagination.value.current = data.result.pagination.current || 1;
+      pagination.value.previous = data.result.pagination.previous || 1;
     },
     (error: any) => {
       console.error('Request failed:', error);
