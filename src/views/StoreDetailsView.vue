@@ -6,26 +6,23 @@ import debounce from 'lodash/debounce';
 import { ProductService } from '@/api/productService';
 import { useRoute } from 'vue-router';
 import Swal from 'sweetalert2';
+import { useSharedRefs } from '@/utils/useSharedRefs';
 
-const productsService = new ProductService();
-const products = ref<any>([])
+const cartIds = ref<any>([]);
 const pagination = ref({
   current: 1,
   next: 0,
   previous: 0,
   pages: 0
 })
-
+const productsService = new ProductService();
+const products = ref<any>([]);
+const quantity = useSharedRefs().quantity;
 const route = useRoute();
+const searchQuery = defineModel('searchQuery', { default: '' });
+const selectedCategory = defineModel('selectedCategory', { default: '' });
 const storeId = ref(route.params.id);
-const cartIds = ref<any>([])
 
-const changePage = (page: any) => {
-  if (page > 0 && page <= pagination.value.pages) {
-    getlist(page)
-  }
-};
-const quantity = ref(0);
 const addProductsInCart = (id: number, selectQuantity: string) => {
   if (!selectQuantity) {
     Swal.fire("Por favor, preencha a quantidade antes de adicionar ao carrinho");
@@ -48,6 +45,12 @@ const addProductsInCart = (id: number, selectQuantity: string) => {
   quantity.value = dataParsed.length
 }
 
+const changePage = (page: any) => {
+  if (page > 0 && page <= pagination.value.pages) {
+    getlist(page)
+  }
+};
+
 const removeProductsInCart = (id: number) => {
   const data = localStorage.getItem('cart') || '';
   const dataParsed = data ? JSON.parse(data) : [];
@@ -60,9 +63,6 @@ const removeProductsInCart = (id: number) => {
   cartIds.value.splice(index, 1)
   quantity.value = cartIds.value.length
 }
-
-const searchQuery = defineModel('searchQuery', { default: '' })
-const selectedCategory = defineModel('selectedCategory', {default: ''})
 
 const filteredStores = () => {
   getlist(1, searchQuery.value, selectedCategory.value)
@@ -88,7 +88,7 @@ const getlist = (page: number, search = '', category = '') => {
 
         } ,
         () => {
-            console.log('falhoooooouuuu')
+         console.log('falhoooooouuuu')
      },
      page,
      search,
