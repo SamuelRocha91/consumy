@@ -1,5 +1,7 @@
 import { BaseService } from './abstractService';
 import { type dataStoreRequest } from '@/types/storeTypes';
+
+
 class StoreService extends BaseService{
   constructor() {
     super();
@@ -21,10 +23,23 @@ class StoreService extends BaseService{
       );
     if (response.ok) {
       this.success(response, onSuccess);
+    } else if (response.status === 401) {
+      await this.refreshToken();
+      const newResponse = await this
+        .getAll
+        (
+          `stores?page=${page}&name=${searchQuery}&category=${category}`
+        );
+      if (newResponse.ok) {
+        this.success(newResponse, onSuccess);
+      } else {
+        this.auth.signOut();
+      }
     } else {
       this.failure(response, onFailure);
     }
   }
+  
 
   failure(response: Response, onFailure: (data: any) => void) {
     response.json().then((erro: any) => onFailure(erro));
@@ -39,6 +54,11 @@ class StoreService extends BaseService{
     });
   }
 
+  private async refreshToken() {
+    const refresh_token = this.storage.get('refresh_token') || '[]';
+    const parseRefresh = refresh_token;
+    await this.auth.refreshTokens(parseRefresh);
+  }
 }
 
 export { StoreService };
