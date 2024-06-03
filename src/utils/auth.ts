@@ -19,6 +19,7 @@ class Auth {
     response.json().then((json) => {
       this.storage.store('token', json.token);
       this.storage.store('email', json.email);
+      this.storage.store('refresh_token', json.refresh_token);
       onSuccess();
     });
   }
@@ -109,6 +110,27 @@ class Auth {
       }
     });
   }
+
+  async refreshTokens(refresh_token: string) {
+    const response = await fetch(`${Auth.URL}/refresh`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-KEY': Auth.X_API_KEY
+      },
+      body: JSON.stringify({ refresh_token: refresh_token })
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      this.storage.store('token', data.token);
+      this.storage.store('email', data.email);
+      this.storage.store('refresh_token', data.refresh_token);
+    } else {
+      return null;
+    }
+  };
+
   
 }
 export { Auth };
