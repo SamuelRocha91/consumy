@@ -9,21 +9,19 @@ import { createStorage } from '@/utils/storage';
 import Swal from 'sweetalert2';
 import type { dataStoreRequest, storeRequest } from '@/types/storeTypes';
 
-const pagination = ref({
-  current: 1,
-  next: 0,
-  previous: 0,
-  pages: 0
-});
 const quantity = useSharedRefs().quantity;
 const searchQuery = defineModel('searchQuery', { default: '' });
 const selectedCategory = defineModel('selectedCategory', { default: '' });
 const storeService = new StoreService();
 const stores = ref<storeRequest[]>([]);
 const storage = createStorage(true);
+const current = ref(0);
+const next = ref(0);
+const previous = ref(0);
+const pages = ref(0);
 
 const changePage = (page: number) => {
-  if (page > 0 && page <= pagination.value.pages) {
+  if (page > 0 && page <= pages.value) {
     getlist(page);
   }
 };
@@ -40,10 +38,10 @@ const getlist = (page: number, search = '', category = '') => {
         ...store,
         src: store.avatar_url,
       }));
-      pagination.value.next = data.result.pagination.next || 1;
-      pagination.value.previous = data.result.pagination.previous || 1;
-      pagination.value.pages = data.result.pagination.pages;
-      pagination.value.current = data.result.pagination.current || 1;
+      next.value = data.result.pagination.next || 1;
+      previous.value = data.result.pagination.previous || 1;
+      pages.value = data.result.pagination.pages;
+      current.value = data.result.pagination.current || 1;
     },
     (erro: any) => {
       console.error('Request failed:', erro);
@@ -72,7 +70,10 @@ onMounted(() => {
    v-if="stores" 
    :entity="stores"
    :addProductsInCart="() => console.log('nada')"
-   :pagination="pagination" 
+   :current="current"
+   :next="next"
+   :previous="previous"
+   :pages="pages"
    :handlePage="changePage" 
    :search="debouncedSearch"
    v-model:searchQuery="searchQuery"

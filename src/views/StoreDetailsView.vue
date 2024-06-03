@@ -14,12 +14,10 @@ import {
 } from '@/types/productTypes';
 
 const cartIds = ref<number[]>([]);
-const pagination = ref({
-  current: 1,
-  next: 0,
-  previous: 0,
-  pages: 0
-});
+const current = ref(0);
+const next = ref(0);
+const previous = ref(0);
+const pages = ref(0);
 const productsService = new ProductService();
 const products = ref<productType[]>([]);
 const quantity = useSharedRefs().quantity;
@@ -54,7 +52,7 @@ const addProductsInCart = (id: number, selectQuantity: string) => {
 };
 
 const changePage = (page: number) => {
-  if (page > 0 && page <= pagination.value.pages) {
+  if (page > 0 && page <= pages.value) {
     getlist(page);
   }
 };
@@ -80,6 +78,8 @@ const filteredStores = () => {
 const debouncedSearch = debounce(filteredStores, 300);
 
 const getlist = (page: number, search = '', category = '') => {
+  const cart = localStorage.getItem('cart') || '[]';
+  const parseCart = JSON.parse(cart);
   productsService.getProducts(
     Number(storeId.value),
     (data: dataProductsRequest) => {
@@ -89,12 +89,14 @@ const getlist = (page: number, search = '', category = '') => {
         src: product.image_url,
         name: product.title,
         inCart: cartIds.value.some((id: number) => id == product.id),
-        quantity: 1
+        quantity: parseCart.some((field: any) => field.id == product.id) ?
+          parseCart.find((field: any) => field.id == product.id).quantity
+          : 1
       }));
-      pagination.value.next = data.result.pagination.next || 1;
-      pagination.value.pages = data.result.pagination.pages;
-      pagination.value.current = data.result.pagination.current || 1;
-      pagination.value.previous = data.result.pagination.previous || 1;
+      next.value = data.result.pagination.next || 1;
+      pages.value = data.result.pagination.pages;
+      current.value = data.result.pagination.current || 1;
+      previous.value = data.result.pagination.previous || 1;
     },
     (error: any) => {
       console.error('Request failed:', error);
@@ -122,7 +124,10 @@ onMounted(() => {
   <ListingStores
    v-if="products" 
    :entity="products" 
-   :pagination="pagination" 
+   :current="current"
+   :next="next"
+   :previous="previous"
+   :pages="pages" 
    :handlePage="changePage" 
    :search="debouncedSearch"
    v-model:searchQuery="searchQuery"
