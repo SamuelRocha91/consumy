@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { catergoriesProducts , categories} from '@/utils/data';
 
-const { entity, pagination } = defineProps<{
+const { entity } = defineProps<{
   entity: any,
-  pagination: any,
+  current: any,
+  next: any,
+  previous: any,
+  pages: any,
   handlePage: (data?: any) => void,
   search: () => void,
   addProductsInCart: (id: number, quantity: string) => void,
@@ -16,7 +18,6 @@ const { entity, pagination } = defineProps<{
 const URL = import.meta.env.VITE_BASE_URL;
 const searchQuery = defineModel('searchQuery', { default: '' });
 const selectedCategory = defineModel('selectedCategory', { default: '' });
-const currentPage = ref(1);
 const router = useRouter();
 const route = useRoute();
 const searchProducts = (id: number) => {
@@ -62,92 +63,63 @@ const searchProducts = (id: number) => {
       </div>
     </div>
   </div>
-
-  <div class="container">
-    <div class="row">
-      <div class="col-md-4 mb-4" v-for="(data, index) in entity" :key="index">
-        <div class="card card-store">
-          <img :src="URL + data.src" class="card-img-top" alt="Store Image">
-          <div class="card-body">
-            <h5 class="card-title">{{ data.name }}</h5>
-            <p class="card-text">{{ data.description }}</p>
-            <p class="card-text">
-              <strong>Categoria:</strong> {{ data.category }}
-            </p>
-            <p v-if="route.path !== '/dashboard/stores'" class="card-text">
-              <strong>Preço:</strong> {{ data.price }}
-            </p>
-            <p v-if="route.path !== '/dashboard/stores'" 
-            class="card-text quantity-select-container">
-                <strong>Quantidade:</strong> 
-                <select v-model="data.quantity"
-                 class="form-select form-select-sm quantity-select" 
-                 id="quantitySelect">
-                  <option v-for="n in 9" :value="n" :key="n">{{ n }}</option>
-                </select>
-              </p>
-            <p v-if="route.path == '/dashboard/stores'"
-            class="card-text">
-            <strong>Distância:</strong>2 km</p>
-            <a 
-            v-if="route.path == '/dashboard/stores'"
-             @click="searchProducts(data.id)"
-              class="btn btn-primary">
-              Ver Produtos
-            </a>
-             <a 
-             v-if="route.path !== '/dashboard/stores' && !data.inCart"
-              @click.prevent="addProductsInCart(data.id, data.quantity)"
-               class="btn btn-primary"
-               >
-               Adicionar ao carrinho
-              </a>
-              <a 
-              v-if="route.path !== '/dashboard/stores' && data.inCart"
-               @click.prevent="removeProductsInCart(data.id)"
-                class="btn btn-danger"
-                >
-                Remover produto
-              </a>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4 mb-4 d-flex align-items-stretch" v-for="(data, index) in entity" :key="index">
+            <div class="card card-store flex-grow-1">
+              <img :src="URL + data.src" class="card-img-top" alt="Store Image">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">{{ data.name }}</h5>
+                <p class="card-text">{{ data.description }}</p>
+                <p class="card-text">
+                  <strong>Categoria:</strong> {{ data.category }}
+                </p>
+                <p v-if="route.path !== '/dashboard/stores'" class="card-text">
+                  <strong>Preço:</strong> {{ data.price }}
+                </p>
+                <p v-if="route.path !== '/dashboard/stores'" class="card-text quantity-select-container">
+                  <strong>Quantidade:</strong> 
+                  <select v-model="data.quantity" class="form-select form-select-sm quantity-select" id="quantitySelect">
+                    <option v-for="n in 9" :value="n" :key="n">{{ n }}</option>
+                  </select>
+                </p>
+                <p v-if="route.path == '/dashboard/stores'" class="card-text">
+                  <strong>Distância:</strong>2 km
+                </p>
+                <div class="mt-auto">
+                  <a v-if="route.path == '/dashboard/stores'" @click="searchProducts(data.id)" class="btn btn-primary">
+                    Ver Produtos
+                  </a>
+                  <a v-if="route.path !== '/dashboard/stores' && !data.inCart" @click.prevent="addProductsInCart(data.id, data.quantity)" class="btn btn-primary">
+                    Adicionar ao carrinho
+                  </a>
+                  <a v-if="route.path !== '/dashboard/stores' && data.inCart" @click.prevent="removeProductsInCart(data.id)" class="btn btn-danger">
+                    Remover produto
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-
     <nav>
-      <ul class="pagination justify-content-end">
-        <li class="page-item" :class="{ disabled: currentPage === 1 }">
-          <a 
-          class="page-link" 
-          href="#" 
-          @click.prevent="handlePage( pagination.previous)"
-          >
-          Anterior
-        </a>
-        </li>
-        <li 
-        class="page-item" v-for="page in pagination.pages" 
-        :key="page" :class="{ active: currentPage === page }">
-          <a 
-          class="page-link"
-           href="#" @click.prevent="handlePage(page)"
-           >
-           {{ page }}
-          </a>
-        </li>
-        <li 
-        class="page-item"
-         :class="{ disabled: currentPage === pagination.pages }"
-         >
-          <a 
-          class="page-link" 
-          href="#" @click.prevent="handlePage(pagination.next)"
-          >
-          Próxima
-        </a>
-        </li>
-      </ul>
-    </nav>
+            <ul class="pagination justify-content-end">
+              <li class="page-item" :class="{ disabled: current === 1 }">
+                <a class="page-link" href="#" @click.prevent="handlePage(previous)">
+                  Anterior
+                </a>
+              </li>
+              <li class="page-item" v-for="page in pages" :key="page" :class="{ active: current === page }">
+                <a class="page-link" href="#" @click.prevent="handlePage(page)">
+                  {{ page }}
+                </a>
+              </li>
+              <li class="page-item" :class="{ disabled: current === pages }">
+                <a class="page-link" href="#" @click.prevent="handlePage(next)">
+                  Próxima
+                </a>
+              </li>
+            </ul>
+           </nav>
   </div>
 </template>
 
