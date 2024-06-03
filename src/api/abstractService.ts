@@ -1,14 +1,17 @@
 import { createStorage, type SimpleStorage } from '../utils/storage';
+import { Auth } from '@/utils/auth';
 
 abstract class BaseService {
   protected apiUrl: string;
   storage: SimpleStorage;
   static X_API_KEY = import.meta.env.VITE_X_API_KEY;
+  protected auth: Auth;
 
   constructor() {
     this.apiUrl = import.meta.env.VITE_BASE_URL;
     const persistent: boolean = this.whatIsMyStorage();
     this.storage = createStorage(persistent);
+    this.auth = new Auth(persistent);
   }
 
   getFallback(key: string): string | null {
@@ -30,6 +33,7 @@ abstract class BaseService {
     );
     return response;
   }
+
 
   private whatIsMyStorage() {
     const transient = createStorage(false);
