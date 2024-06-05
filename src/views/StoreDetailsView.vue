@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import NavBar from '@/components/NavBar.vue';
 import ListingStores from '@/components/ListingEntity.vue';
 import { onMounted, ref } from 'vue';
 import debounce from 'lodash/debounce';
@@ -120,7 +119,6 @@ onMounted(() => {
 });
 </script>
 <template>
-  <NavBar :quantity="quantity"/>
   <ListingStores
    v-if="products" 
    :entity="products" 

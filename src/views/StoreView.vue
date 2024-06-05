@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import NavBar from '@/components/NavBar.vue';
 import ListingStores from '@/components/ListingEntity.vue';
 import { onMounted, ref } from 'vue';
 import { StoreService } from '@/api/storeService';
@@ -65,7 +64,6 @@ onMounted(() => {
 });
 </script>
 <template>
-  <NavBar :quantity="quantity"/>
   <ListingStores
    v-if="stores" 
    :entity="stores"

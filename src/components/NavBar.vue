@@ -21,10 +21,18 @@ const signOut = function () {
         <h3 class="navbar-brand p-2" v-if="currentUser">
           Olá, {{ currentUser && currentUser.email }}
         </h3>
-          <li class="nav-item  p-2 d-flex">
+          <li  v-if="currentUser" class="nav-item  p-2 d-flex">
             <RouterLink 
             class="nav-link text-white"
             to="/dashboard"
+            >
+            Home
+          </RouterLink>
+          </li>
+          <li  v-if="!currentUser" class="nav-item  p-2 d-flex">
+            <RouterLink 
+            class="nav-link text-white"
+            to="/"
             >
             Home
           </RouterLink>

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import NavBar from '@/components/NavBar.vue';
 import HomePage from '@/components/HomePage.vue';
 import { onMounted } from 'vue';
 import { createStorage } from '@/utils/storage';
@@ -20,6 +19,5 @@ onMounted(() => {
  
 
 <template>
- <NavBar :quantity="quantity"/>
  <HomePage />
 </template>

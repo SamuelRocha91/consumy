@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import NavBar from '@/components/NavBar.vue';
 import CartList from '@/components/CartList.vue';
 import CartEmpty from '@/components/CartEmpty.vue';
 import { useSharedRefs } from '@/utils/useSharedRefs';
@@ -60,7 +59,6 @@ const removeCart = (id: number) => {
 </script>
  
 <template>
- <NavBar :quantity="quantity" />
  <CartList v-if="cart.length > 0" :products="cart" :removeCart="removeCart"/>
    <div v-if="cart.length > 0" class="price-container">
     <p class="price-display">Total: {{ total }}</p>
