@@ -7,6 +7,7 @@ import ProfileView from '@/views/ProfileView.vue';
 import StoreView from '@/views/StoreView.vue';
 import StoreDetailsView from '@/views/StoreDetailsView.vue';
 import CartView from '@/views/CartView.vue';
+import { Auth } from '../utils/auth'; 
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,11 +30,13 @@ const router = createRouter({
     {
       path: '/dashboard',
       name: 'dashboard',
+      meta: { requiresAuth: true },
       component: DashBoardView
     },
     {
       path: '/dashboard/profile',
       name: 'profile',
+      meta: { requiresAuth: true },
       component: ProfileView
     },
     {
@@ -52,6 +55,19 @@ const router = createRouter({
       name: 'cart',
     }
   ]
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    const auth = new Auth();
+    if (!auth.currentUser()) {
+      next({ name: 'signIn' });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;
