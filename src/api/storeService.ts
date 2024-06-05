@@ -13,15 +13,28 @@ class StoreService extends BaseService{
     onFailure: (data: any) => void,
     searchQuery = '',
     category = '',
+    auth = true,
   ) {
+    let response: Response;
+
     if (searchQuery == "Todos") {
       searchQuery = '';
     }
-    const response = await this
-      .getAll(
-        `stores?page=${page}&name=${searchQuery}&category=${category}`
-      );
+    if (auth) {
+      response = await this
+        .getAll(
+          `stores?page=${page}&name=${searchQuery}&category=${category}`
+        );
+    } else {
+      response = await this
+        .getAllWithinToken(
+          `stores/listing?page=${page}&name=${searchQuery}&category=${category}`
+        );
+    }
+    
     if (response.ok) {
+      console.log('aqui2');
+
       this.success(response, onSuccess);
     } else if (response.status === 401) {
       await this.refreshToken();
@@ -50,6 +63,7 @@ class StoreService extends BaseService{
     onSuccess: (data: dataStoreRequest) => void,
   ) {
     response.json().then((json) => {
+      console.log(json);
       onSuccess(json);
     });
   }

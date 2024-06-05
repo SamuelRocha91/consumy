@@ -7,7 +7,9 @@ import { useSharedRefs } from '@/utils/useSharedRefs';
 import { createStorage } from '@/utils/storage';
 import Swal from 'sweetalert2';
 import type { dataStoreRequest, storeRequest } from '@/types/storeTypes';
+import { Auth } from '@/utils/auth';
 
+const auth = new Auth();
 const quantity = useSharedRefs().quantity;
 const searchQuery = defineModel('searchQuery', { default: '' });
 const selectedCategory = defineModel('selectedCategory', { default: '' });
@@ -30,25 +32,48 @@ const filteredStores = () => {
 };
 
 const getlist = (page: number, search = '', category = '') => {
-  storeService.getStores(
-    page,
-    (data: dataStoreRequest) => {
-      stores.value = data.result.stores.map((store: any) => ({
-        ...store,
-        src: store.avatar_url,
-      }));
-      next.value = data.result.pagination.next || 1;
-      previous.value = data.result.pagination.previous || 1;
-      pages.value = data.result.pagination.pages;
-      current.value = data.result.pagination.current || 1;
-    },
-    (erro: any) => {
-      console.error('Request failed:', erro);
-      Swal.fire('Falha ao tentar carregar as lojas. Tente novamente');
-    },
-    search,
-    category
-  );
+  if (auth.currentUser()) {
+    storeService.getStores(
+      page,
+      (data: dataStoreRequest) => {
+        stores.value = data.result.stores.map((store: any) => ({
+          ...store,
+          src: store.avatar_url,
+        }));
+        next.value = data.result.pagination.next || 1;
+        previous.value = data.result.pagination.previous || 1;
+        pages.value = data.result.pagination.pages;
+        current.value = data.result.pagination.current || 1;
+      },
+      (erro: any) => {
+        console.error('Request failed:', erro);
+        Swal.fire('Falha ao tentar carregar as lojas. Tente novamente');
+      },
+      search,
+      category
+    );
+  } else {
+    storeService.getStores(
+      page,
+      (data: dataStoreRequest) => {
+        stores.value = data.result.stores.map((store: any) => ({
+          ...store,
+          src: store.avatar_url,
+        }));
+        next.value = data.result.pagination.next || 1;
+        previous.value = data.result.pagination.previous || 1;
+        pages.value = data.result.pagination.pages;
+        current.value = data.result.pagination.current || 1;
+      },
+      (erro: any) => {
+        console.error('Request failed:', erro);
+        Swal.fire('Falha ao tentar carregar as lojas. Tente novamente');
+      },
+      search,
+      category,
+      false
+    );
+  }
 };
 
 const debouncedSearch = debounce(filteredStores, 300);

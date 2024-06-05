@@ -14,16 +14,27 @@ class ProductService extends BaseService{
     page: number,
     searchQuery = '',
     category = '',
+    auth = true,
   ) {
+    let response: Response;
   
     if (searchQuery == "Todos") {
       searchQuery = '';
     }
-    const response = await this
-      .getAll
-      (
-        `stores/${id}/products?page=\n${page}&name=${searchQuery}&category=${category}&locale=pt-BR`
-      );
+
+    if (auth) {
+      response = await this
+        .getAll
+        (
+          `stores/${id}/products?page=\n${page}&name=${searchQuery}&category=${category}&locale=pt-BR`
+        );
+    } else {
+      response = await this
+        .getAllWithinToken
+        (
+          `products/listing${id}/products?page=\n${page}&name=${searchQuery}&category=${category}&locale=pt-BR`
+        );
+    }
     
     if (response.ok) {
       this.success(response, onSuccess);

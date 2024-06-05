@@ -34,6 +34,19 @@ abstract class BaseService {
     return response;
   }
 
+  protected async getAllWithinToken(path: string): Promise<Response> {
+    const response = await fetch(`${this.apiUrl}/${path}`,
+      {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }
+      }
+    );
+    return response;
+  }
+
 
   private whatIsMyStorage() {
     const transient = createStorage(false);
