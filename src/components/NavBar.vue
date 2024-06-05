@@ -18,7 +18,7 @@ const signOut = function () {
 </script>
 <template>
     <nav class="navbar navbar-dark bg-info px-3 p-2 d-flex align-items-center">
-        <h3 class="navbar-brand p-2">
+        <h3 class="navbar-brand p-2" v-if="currentUser">
           Olá, {{ currentUser && currentUser.email }}
         </h3>
           <li class="nav-item  p-2 d-flex">
@@ -29,7 +29,7 @@ const signOut = function () {
             Home
           </RouterLink>
           </li>
-          <li class="nav-item p-2 d-flex">
+          <li v-if="currentUser" class="nav-item p-2 d-flex">
             <RouterLink class="nav-link text-white" to="">Pedidos</RouterLink>
           </li>
           <li class="nav-item p-2 d-flex">
@@ -37,7 +37,7 @@ const signOut = function () {
               Quero comer
             </RouterLink>
           </li>
-          <li class="nav-item p-2 d-flex">
+          <li v-if="currentUser" class="nav-item p-2 d-flex">
             <RouterLink
             class="nav-link text-white"
             to="/dashboard/profile"
@@ -53,10 +53,26 @@ const signOut = function () {
            </li>
         <nav>
           <a 
+          v-if="currentUser"
           class="btn btn-outline-info text-white my-2 my-sm-0 p-2"
            @click.prevent="signOut"
            >
            Sign Out
+          </a>
+
+           <a 
+             v-if="!currentUser"
+             href="/signIn"
+             class="btn btn-outline-info text-white my-2 display-5 my-sm-0 p-2"
+           >
+           Login
+          </a>
+           <a 
+             v-if="!currentUser"
+             href="/signUp"
+             class="btn btn-outline-info text-white my-2 my-sm-0 p-2"
+           >
+           registro
           </a>
         </nav>
     </nav>
