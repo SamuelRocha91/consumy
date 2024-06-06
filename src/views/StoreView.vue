@@ -10,23 +10,22 @@ import type { dataStoreRequest, storeRequest } from '@/types/storeTypes';
 import { Auth } from '@/utils/auth';
 
 const auth = new Auth();
+const current = ref(0);
+const next = ref(0);
+const previous = ref(0);
+const pages = ref(0);
 const quantity = useSharedRefs().quantity;
 const searchQuery = defineModel('searchQuery', { default: '' });
 const selectedCategory = defineModel('selectedCategory', { default: '' });
 const storeService = new StoreService();
 const stores = ref<storeRequest[]>([]);
 const storage = createStorage(true);
-const current = ref(0);
-const next = ref(0);
-const previous = ref(0);
-const pages = ref(0);
 
 const changePage = (page: number) => {
   if (page > 0 && page <= pages.value) {
     getlist(page);
   }
 };
-
 
 const fetchStores = (page: number, search = '', category = '', withToken = true) => {
   storeService.getStores(
