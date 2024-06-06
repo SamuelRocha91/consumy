@@ -67,7 +67,7 @@ const removeCart = (id: number) => {
  <CartEmpty v-else />
 </template>
 
-<style scoped>
+<style>
 .price-container {
   padding: 1rem;
   background-color: #f8f9fa;

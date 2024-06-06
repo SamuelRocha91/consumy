@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import Swal from 'sweetalert2';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-
+import { createStorage } from '@/utils/storage';
 
 const payment = ref({
   payment: "",
@@ -11,22 +11,58 @@ const payment = ref({
   cardExpiration: "",
   cardCVV: ""
 });
-const router = useRouter();
-
 const paymentSent = ref(false);
+const router = useRouter();
+const storage = createStorage(true);
+const total = ref("");
+
+const handleInput = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  switch (target.name) {
+  case "cardNumber":
+    target.value = target.value
+      .replace(/\D/g, "")
+      .replace(/(\d{4})(\d)/, "$1 $2")
+      .replace(/(\d{4})(\d)/, "$1 $2")
+      .replace(/(\d{4})(\d)/, "$1 $2");
+    break;
+  case "cardExpiration":
+    target.value = target.value
+      .replace(/\D/g, "")
+      .replace(/(\d{2})(\d)/, "$1/$2")
+      .replace(/(\d{2})(\d)/, "$1/$2");
+    break;
+  }
+  payment.value = {
+    ...payment.value,
+    [target.name]: target.value
+  };
+};
+
+const handlePage = () => {
+  router.push("/orders");
+};
+
+const handleSubmit = (event: Event) => {
+  event.preventDefault();
+  if (!validateFields()) {
+    return;
+  };
+  paymentSent.value = true;
+};
 
 const validateFields = () => {
   if (!payment.value.payment) {
     Swal.fire("Selecione um método de pagamento");
     return false;
-  } else if (!payment.value.cardNumber) {
+  } else if (!payment.value.cardNumber || payment.value.cardNumber.length < 19) {
     Swal.fire("Preencha o número do cartão");
     return false;
   } else if (!payment.value.cardName) {
     Swal.fire("Preencha o nome do titular do cartão");
     return false;
 
-  } else if (!payment.value.cardExpiration) {
+  } else if (!payment.value.cardExpiration || payment.value.cardExpiration.length < 10) {
     Swal.fire("Preencha a data de expiração");
     return false;
 
@@ -39,24 +75,37 @@ const validateFields = () => {
   }
 };
 
-const handleSubmit = (event: Event) => {
-  event.preventDefault();
-  if (!validateFields()) {
-    return;
-  };
-  paymentSent.value = true;
+const formatPrice = (price: number) => {
+  return price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 };
 
-const handleInput = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  payment.value = {
-    ...payment.value,
-    [target.name]: target.value
-  };
+const parsePrice = (priceString: string) => {
+  return parseFloat(priceString.replace('R$', '').replace(',', '.'));
 };
+
+const sumPrices = (priceStrings: string[]) => {
+  return priceStrings.reduce((total, priceString) => {
+    return total + parsePrice(priceString);
+  }, 0);
+};
+
+onMounted(() => {
+  const arrayPrices: string[] = [];
+  const data = storage.get('cart') || '[]';
+  const dataParsed = JSON.parse(data);
+  if (dataParsed) {
+   
+    dataParsed.forEach((product: any) => {
+      for (let i = 0; i < product.quantity; i += 1) {
+        arrayPrices.push(product.price);
+      }
+    });
+    const sum = sumPrices(arrayPrices);
+    total.value = formatPrice(sum);
+  }
+});
 </script>
  
-
 <template>
     <template v-if="!paymentSent">
      <div class="container mt-5 gap-3">
@@ -85,6 +134,7 @@ const handleInput = (event: Event) => {
             class="form-control"
             id="cardNumber"
             name="cardNumber"
+            maxlength="19"
             >
           </div>
           <div class="form-group">
@@ -107,6 +157,7 @@ const handleInput = (event: Event) => {
             :value="payment.cardExpiration"
             id="cardExpiration"
             name="cardExpiration"
+            maxlength="10"
             >
           </div>
           <div class="form-group">
@@ -119,8 +170,10 @@ const handleInput = (event: Event) => {
             :value="payment.cardCVV"
             id="cardCVV"
             name="cardCVV"
+            maxlength="3"
             >
           </div>
+          <p class="price-display">Total: {{ total }}</p>
         </div>
         <div  class="d-flex justify-content-center">
           <button type="submit" class="btn btn-primary">Pagar</button>
@@ -134,9 +187,9 @@ const handleInput = (event: Event) => {
             <div class="alert alert-success" role="alert">
             Solicitação de pagamento efetuado com sucesso!
             </div>
-        </div>
-        <div>
-          <button class="btn btn-primary" @click.prevent="router.push('/dashboard/pedidos')">Acompanhar meus pedidos</button>
+            <div>
+               <button class="btn btn-primary" @click.prevent="handlePage">Acompanhar meus pedidos</button>
+            </div>
         </div>
     </template>
 </template>
