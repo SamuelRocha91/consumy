@@ -47,7 +47,7 @@ const removeCart = (id: number) => {
   const list = cart.value.filter((product: any) => product.id !== id);
   cart.value = list;
   storage.store('cart', JSON.stringify(list));
-  quantity.value = list.length;
+  quantity.value = list.reduce((acc: any, curr: any) => acc + curr.quantity, 0);
   cart.value.forEach((product: any) => {
     for (let i = 0; i < product.quantity; i += 1) {
       arrayPrices.push(product.price);
