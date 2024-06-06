@@ -36,10 +36,32 @@ const addProductsInCart = (id: number, selectQuantity: string) => {
     return;
   }
   const data = storage.get('cart') || '[]';
-  const dataParsed = JSON.parse(data);
+  let dataParsed = JSON.parse(data);
   const product = products.value.find((product: any) => product.id === id);
   const index = products.value.findIndex((product: any) => product.id === id);
-
+  if (dataParsed.some((prodct: any) => prodct.storeId != product?.storeId)) {
+    Swal.fire({
+      title: "Você já possui rango de outra loja no carrinho",
+      text: "Deseja esvaziar o carrinho e adicionar o novo item?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "É sim, correto e certo!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dataParsed = product;
+        storage.store('cart', JSON.stringify([dataParsed]));
+        cartIds.value = [id];
+        products.value[index].inCart = true;
+        quantity.value = Number(selectQuantity);
+        return;
+      } else {
+        return;
+      }
+    });
+    return;
+  }
   const newObjectCart = {
     ...product,
     storeId: storeId.value,
@@ -93,7 +115,8 @@ const getlist = (page: number, search = '', category = '') => {
           inCart: cartIds.value.some((id: number) => id == product.id),
           quantity: parseCart.some((field: any) => field.id == product.id) ?
             parseCart.find((field: any) => field.id == product.id).quantity
-            : 1
+            : 1,
+          storeId: product.store_id
         }));
         next.value = data.result.pagination.next || 1;
         pages.value = data.result.pagination.pages;
@@ -120,7 +143,8 @@ const getlist = (page: number, search = '', category = '') => {
           inCart: cartIds.value.some((id: number) => id == product.id),
           quantity: parseCart.some((field: any) => field.id == product.id) ?
             parseCart.find((field: any) => field.id == product.id).quantity
-            : 1
+            : 1,
+          storeId: product.store_id
         }));
         next.value = data.result.pagination.next || 1;
         pages.value = data.result.pagination.pages;
