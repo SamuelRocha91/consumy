@@ -9,6 +9,7 @@ import StoreDetailsView from '@/views/StoreDetailsView.vue';
 import CartView from '@/views/CartView.vue';
 import { Auth } from '../utils/auth'; 
 import NotFoundView from '@/views/NotFoundView.vue';
+import PaymentView from '@/views/PaymentView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -54,6 +55,12 @@ const router = createRouter({
       path: '/dashboard/cart',
       component: CartView,
       name: 'cart',
+    },
+    {
+      path: '/dashboard/payment',
+      component: PaymentView,
+      meta: { requiresAuth: true },
+      name: 'payment',
     },
     {
       path: '/:catchAll(.*)',
