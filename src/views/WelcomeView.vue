@@ -67,6 +67,6 @@ const handleClick = () => {
 }
 
 .main-content button:hover {
-  background-color: #0056b3; /* Cor de fundo azul mais escura no hover */
+  background-color: #0056b3;
 }
 </style>

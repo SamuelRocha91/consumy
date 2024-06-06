@@ -29,8 +29,6 @@ class ProductService extends BaseService{
           `stores/${id}/products?page=\n${page}&name=${searchQuery}&category=${category}&locale=pt-BR`
         );
     } else {
-      console.log('correto');
-
       response = await this
         .getAllWithinToken
         (
