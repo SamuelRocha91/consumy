@@ -26,6 +26,7 @@ class StoreService extends BaseService{
           `stores?page=${page}&name=${searchQuery}&category=${category}`
         );
     } else {
+      console.log('corretossss');
       response = await this
         .getAllWithinToken(
           `stores/listing?page=${page}&name=${searchQuery}&category=${category}`
@@ -62,7 +63,11 @@ class StoreService extends BaseService{
     response: Response,
     onSuccess: (data: dataStoreRequest) => void,
   ) {
+    console.log('aqui3');
+
     response.json().then((json) => {
+      console.log('aqui4');
+
       console.log(json);
       onSuccess(json);
     });

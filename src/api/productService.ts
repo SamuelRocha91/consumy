@@ -29,10 +29,12 @@ class ProductService extends BaseService{
           `stores/${id}/products?page=\n${page}&name=${searchQuery}&category=${category}&locale=pt-BR`
         );
     } else {
+      console.log('correto');
+
       response = await this
         .getAllWithinToken
         (
-          `products/listing${id}/products?page=\n${page}&name=${searchQuery}&category=${category}&locale=pt-BR`
+          `stores/${id}/products/listing?page=\n${page}&name=${searchQuery}&category=${category}&locale=pt-BR`
         );
     }
     
@@ -60,6 +62,7 @@ class ProductService extends BaseService{
     onSuccess: (data: dataProductsRequest) => void,
   ) {
     response.json().then((json) => {
+      console.log(json);
       onSuccess(json);
     });
   }
