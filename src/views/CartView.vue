@@ -4,11 +4,17 @@ import CartList from '@/components/CartList.vue';
 import CartEmpty from '@/components/CartEmpty.vue';
 import { useSharedRefs } from '@/utils/useSharedRefs';
 import { createStorage } from '@/utils/storage';
+import { useRouter } from 'vue-router';
 
 const cart = ref([]);
 const quantity = useSharedRefs().quantity;
 const storage = createStorage(true);
+const router = useRouter();
 const total = ref("");
+
+const handlePage = () => {
+  router.push("/dashboard/payment");
+};
 
 const formatPrice = (price: number) => {
   return price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -62,7 +68,7 @@ const removeCart = (id: number) => {
  <CartList v-if="cart.length > 0" :products="cart" :removeCart="removeCart"/>
    <div v-if="cart.length > 0" class="price-container">
     <p class="price-display">Total: {{ total }}</p>
-    <button class="btn btn-primary">Fechar pedido</button>
+    <button @click="handlePage" class="btn btn-primary">Fechar pedido</button>
   </div>
  <CartEmpty v-else />
 </template>
