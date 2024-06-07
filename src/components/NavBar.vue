@@ -8,12 +8,12 @@ defineProps<{
 }>();
 
 const auth = new Auth();
-const isLoggedIn = ref(auth.isLoggedIn());
 const route = useRouter();
 const currentUser = ref(auth.currentUser());
 const signOut = function () {
-  auth.signOut(() => (isLoggedIn.value = auth.isLoggedIn()));
+  auth.signOut();
   route.push('/');
+  currentUser.value = null;
 };
 </script>
 <template>

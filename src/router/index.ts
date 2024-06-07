@@ -65,6 +65,7 @@ const router = createRouter({
     {
       path: '/dashboard/orders/:id',
       component: OrderView,
+      meta: { requiresAuth: true },
       name: 'order',
     },
     {
