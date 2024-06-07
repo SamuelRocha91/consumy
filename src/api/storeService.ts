@@ -54,30 +54,6 @@ class StoreService extends BaseService{
     }
   }
   
-
-  failure(response: Response, onFailure: (data: any) => void) {
-    response.json().then((erro: any) => onFailure(erro));
-  }
-
-  success(
-    response: Response,
-    onSuccess: (data: dataStoreRequest) => void,
-  ) {
-    console.log('aqui3');
-
-    response.json().then((json) => {
-      console.log('aqui4');
-
-      console.log(json);
-      onSuccess(json);
-    });
-  }
-
-  private async refreshToken() {
-    const refresh_token = this.storage.get('refresh_token') || '[]';
-    const parseRefresh = refresh_token;
-    await this.auth.refreshTokens(parseRefresh);
-  }
 }
 
 export { StoreService };

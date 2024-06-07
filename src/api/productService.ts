@@ -54,26 +54,7 @@ class ProductService extends BaseService{
       this.failure(response, onFailure);
     }
   }
-  
-  success(
-    response: Response,
-    onSuccess: (data: dataProductsRequest) => void,
-  ) {
-    response.json().then((json) => {
-      console.log(json);
-      onSuccess(json);
-    });
-  }
-  
-  failure(response: Response, onFailure: (data: any) => void) {
-    response.json().then((json) => onFailure(json));
-  }  
 
-  private async refreshToken() {
-    const refresh_token = this.storage.get('refresh_token') || '[]';
-    const parseRefresh = refresh_token;
-    await this.auth.refreshTokens(parseRefresh);
-  }
 }
 
 export { ProductService };

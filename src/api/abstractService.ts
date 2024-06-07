@@ -47,6 +47,59 @@ abstract class BaseService {
     return response;
   }
 
+  protected async post(path: string, body: any): Promise<Response> {
+    const token = this.getFallback('token');
+    const response = await fetch(`${this.apiUrl}/${path}`,
+      {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'X-API-KEY': BaseService.X_API_KEY
+        },
+        body: JSON.stringify(body)
+      }
+    );
+    return response;
+  }
+
+  protected async put(path: string, body: any): Promise<Response> {
+    const token = this.getFallback('token');
+    const response = await fetch(`${this.apiUrl}/${path}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'X-API-KEY': BaseService.X_API_KEY
+        },
+        body: JSON.stringify(body)
+      }
+    );
+    return response;
+  }
+
+  protected success(
+    response: Response,
+    onSuccess: (data: any) => void,
+  ) {
+    response.json().then((json) => {
+      console.log(json);
+      onSuccess(json);
+    });
+  }
+
+  protected failure(response: Response, onFailure: (data: any) => void) {
+    response.json().then((json) => onFailure(json));
+  }  
+
+  protected async refreshToken() {
+    const refresh_token = this.storage.get('refresh_token') || '[]';
+    const parseRefresh = refresh_token;
+    await this.auth.refreshTokens(parseRefresh);
+  }
 
   private whatIsMyStorage() {
     const transient = createStorage(false);
