@@ -38,7 +38,7 @@ const signOut = function () {
           </RouterLink>
           </li>
           <li v-if="currentUser" class="nav-item p-2 d-flex">
-            <RouterLink class="nav-link text-white" to="">Pedidos</RouterLink>
+            <RouterLink class="nav-link text-white" to="/dashboard/orders">Pedidos</RouterLink>
           </li>
           <li class="nav-item p-2 d-flex">
             <RouterLink class="nav-link text-white" to="/dashboard/stores">
