@@ -3,8 +3,10 @@ import Swal from 'sweetalert2';
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { createStorage } from '@/utils/storage';
+import { orderService } from '@/api/orderService';
+import { useSharedRefs } from '@/utils/useSharedRefs';
 
-const payment = ref({
+const paymentData = ref({
   payment: "",
   cardNumber: "",
   cardName: "",
@@ -12,6 +14,7 @@ const payment = ref({
   cardCVV: ""
 });
 const paymentSent = ref(false);
+const quantity = useSharedRefs().quantity;
 const router = useRouter();
 const storage = createStorage(true);
 const total = ref("");
@@ -33,8 +36,8 @@ const handleInput = (event: Event) => {
       .replace(/(\d{2})(\d)/, "$1/$2");
     break;
   }
-  payment.value = {
-    ...payment.value,
+  paymentData.value = {
+    ...paymentData.value,
     [target.name]: target.value
   };
 };
@@ -48,25 +51,54 @@ const handleSubmit = (event: Event) => {
   if (!validateFields()) {
     return;
   };
+
+  const [day, month, year] = paymentData.value.cardExpiration.split('/');
+  const americanDate = `${year}-${month}-${day}`;
+  const price = total.value.replace('R$', '').replace(',', '.');
+  const payment = {
+    value: price,
+    number: paymentData.value.cardNumber,
+    valid: americanDate,
+    cvv: paymentData.value.cardCVV,
+  };
+  const data = storage.get('cart') || '[]';
+  const dataParsed = JSON.parse(data);
+  const order = {
+    store_id: dataParsed[0].store_id,
+    order_items_attributes: dataParsed.map((product: any) => {
+      return {
+        product_id: product.id,
+        amount: product.quantity,
+        price: product.price.replace('R$', '')
+      };
+    })
+  };
   paymentSent.value = true;
+  orderService.createOrder(order, payment, () => {
+    storage.remove('cart');
+    quantity.value = 0;
+    console.log('Pedido efetuado com sucesso');
+  }, () => {
+    Swal.fire("Erro ao efetuar pagamento");
+  });
 };
 
 const validateFields = () => {
-  if (!payment.value.payment) {
+  if (!paymentData.value.payment) {
     Swal.fire("Selecione um método de pagamento");
     return false;
-  } else if (!payment.value.cardNumber || payment.value.cardNumber.length < 19) {
+  } else if (!paymentData.value.cardNumber || paymentData.value.cardNumber.length < 19) {
     Swal.fire("Preencha o número do cartão");
     return false;
-  } else if (!payment.value.cardName) {
+  } else if (!paymentData.value.cardName) {
     Swal.fire("Preencha o nome do titular do cartão");
     return false;
 
-  } else if (!payment.value.cardExpiration || payment.value.cardExpiration.length < 10) {
+  } else if (!paymentData.value.cardExpiration || paymentData.value.cardExpiration.length < 10) {
     Swal.fire("Preencha a data de expiração");
     return false;
 
-  } else if (!payment.value.cardCVV) {
+  } else if (!paymentData.value.cardCVV) {
     Swal.fire("Preencha o CVV");
     return false;
 
@@ -129,7 +161,7 @@ onMounted(() => {
             <input
             @input="handleInput"
             placeholder="xxxx xxxx xxxx xxxx"
-            :value="payment.cardNumber"
+            :value="paymentData.cardNumber"
             type="text"
             class="form-control"
             id="cardNumber"
@@ -144,7 +176,7 @@ onMounted(() => {
             placeholder="Zeca Tatu Lombriga"
             type="text" class="form-control"
             id="cardName"
-            :value="payment.cardName"
+            :value="paymentData.cardName"
             name="cardName">
           </div>
           <div class="form-group">
@@ -154,7 +186,7 @@ onMounted(() => {
             placeholder="01-07-2050"
             type="text"
             class="form-control"
-            :value="payment.cardExpiration"
+            :value="paymentData.cardExpiration"
             id="cardExpiration"
             name="cardExpiration"
             maxlength="10"
@@ -167,7 +199,7 @@ onMounted(() => {
             placeholder="123"
             type="text"
             class="form-control"
-            :value="payment.cardCVV"
+            :value="paymentData.cardCVV"
             id="cardCVV"
             name="cardCVV"
             maxlength="3"
