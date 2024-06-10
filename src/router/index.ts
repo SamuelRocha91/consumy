@@ -60,13 +60,14 @@ const router = createRouter({
     {
       path: '/dashboard/orders',
       component: OrderView,
+      meta: { requiresAuth: true },
       name: 'order',
     },
     {
       path: '/dashboard/orders/:id',
       component: OrderView,
       meta: { requiresAuth: true },
-      name: 'order',
+      name: 'orderItem',
     },
     {
       path: '/dashboard/payment',

@@ -15,6 +15,7 @@
     "type": "vue-tsc --build --force --watch"
   },
   "dependencies": {
+    "@microsoft/fetch-event-source": "^2.0.1",
     "lodash": "^4.17.21",
     "sweetalert2": "^11.10.7",
     "vue": "^3.4.15",
