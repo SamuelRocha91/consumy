@@ -78,6 +78,25 @@ class OrderService extends BaseService{
       this.failure(paymentResponse, onFailure);
     }
   }   
+
+  async getOrders(onSuccess: (data: any) => void, onFailure: () => void, page = 1) {
+    const response = await this.getAll(`buyers/orders?page=${page}`);
+    if (response.ok) {
+      const data = await response.json();
+      onSuccess(data);
+    } else if (response.status === 401) {
+      await this.refreshToken();
+      const newResponse = await this.getAll(`buyers/orders?page=${page}`);
+      if (newResponse.ok) {
+        const data = await newResponse.json();
+        onSuccess(data);
+      } else {
+        this.auth.signOut();
+      }
+    } else {
+      this.failure(response, onFailure);
+    }
+  }
 }
 
 export const orderService = new OrderService();

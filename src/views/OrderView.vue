@@ -34,6 +34,21 @@ onMounted(() => {
     console.log('Reconnecting to the order stream...');
     loadingInProgress.value = false;
   });
+  orderService.getOrders((data) => {
+    console.log('Orders fetched:', data);
+    ordersFinished.value = data.result.orders.map((order: any) => ({
+      id: order.id,
+      hour: order.created_at.split('T')[1].split('.')[0],
+      date: order.created_at.split('T')[0],
+      status: order.state,
+    }));
+    totalPages.value = data.result.pagination.pages;
+    currentPage.value = data.result.pagination.current;
+    loadingFinished.value = false;
+  }, () => {
+    console.log('Error fetching orders');
+    loadingFinished.value = false;
+  });
 });
 
 </script>
@@ -55,7 +70,7 @@ onMounted(() => {
       <div class="col-12">
         <h2>Histórico de Pedidos</h2>
         <div v-if="loadingFinished" class="loading">Carregando...</div>
-        <div v-else>
+        <div v-else  class="flex-cont">
           <OrderCard v-for="order in ordersFinished" :key="order.id" :order="order" />
         </div>
         <PaginationPage :currentPage="currentPage" :totalPages="totalPages" @page-changed="fetchOrders" />
