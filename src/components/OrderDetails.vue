@@ -2,7 +2,16 @@
 defineProps<{
   order: any,
   cancelOrder: (id: number) => void,
+  sendToOrderPage: () => void,
 }>();
+
+const isCancelable = (status: string) => {
+  if (status === 'payment_failed' || status == 'delivered' || status == 'canceled') {
+    return false;
+  } else {
+    return true;
+  }
+};
 </script>
 <template>
   <div class="card">
@@ -24,7 +33,8 @@ defineProps<{
       <p class="total" >Total: R${{ order.total }}</p>
     </div>
     <div class="card-footer d-flex justify-content-end">
-      <button @click="cancelOrder(order.id)" class="btn btn-danger">Recusar</button>
+      <button @click="sendToOrderPage" class="btn btn-primary">Retornar para página de pedidos</button>
+      <button v-if="isCancelable(order.status)" @click="cancelOrder(order.id)" class="btn btn-danger">Recusar</button>
     </div>
 
   </div>

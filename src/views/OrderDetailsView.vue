@@ -7,12 +7,15 @@ import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
 import Swal from 'sweetalert2';
 
-
 const cancelOrder = (id: number) => {
   orderService.cancelOrder(1, id, () => {
     Swal.fire('Pedido cancelado com sucesso!');
     router.push('/dashboard/orders');
   });
+};
+
+const sendToOrderPage = () => {
+  router.push('/dashboard/orders');
 };
 const order = ref<Order[]>([]);
 const router = useRouter();
@@ -26,5 +29,9 @@ onMounted(() => {
 });
 </script>
 <template>
-    <OrderDetails :order="order" :cancelOrder="cancelOrder"/>
+    <OrderDetails
+     :order="order" 
+     :cancelOrder="cancelOrder"
+     :sendToOrderPage="sendToOrderPage"
+     />
 </template>
