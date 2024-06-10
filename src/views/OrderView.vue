@@ -73,7 +73,7 @@ onMounted(() => {
         <div v-else  class="flex-cont">
           <OrderCard v-for="order in ordersFinished" :key="order.id" :order="order" />
         </div>
-        <PaginationPage :currentPage="currentPage" :totalPages="totalPages" @page-changed="fetchOrders" />
+        <PaginationPage :currentPage="currentPage" :totalPages="totalPages" :changePage="fetchOrders" />
       </div>
     </div>
   </div>

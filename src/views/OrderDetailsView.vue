@@ -4,19 +4,23 @@ import { onMounted, ref } from 'vue';
 import type { Order } from '../types/orderTypes';
 import { orderService } from '@/api/orderService';
 import { useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import Swal from 'sweetalert2';
 
-const order = ref<Order[]>([]);
-const router = useRouter();
+
 const cancelOrder = (id: number) => {
   orderService.cancelOrder(1, id, () => {
     Swal.fire('Pedido cancelado com sucesso!');
     router.push('/dashboard/orders');
   });
 };
+const order = ref<Order[]>([]);
+const router = useRouter();
+const $route = useRoute();
+const id = Number($route.params.id);
 
 onMounted(() => {
-  orderService.getOrderById(1, (data: any) => {
+  orderService.getOrderById(id, (data: any) => {
     order.value = data;
   });
 });

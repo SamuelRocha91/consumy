@@ -1,4 +1,9 @@
 <script setup lang="ts">
+defineProps<{
+  currentPage: number,
+  totalPages: number,
+  changePage: (page: number) => void,
+}>();
 </script>
 <template>
   <nav>
