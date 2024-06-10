@@ -5,6 +5,12 @@ import { orderService } from '@/api/orderService';
 import type { Order } from '../types/orderTypes';
 import PaginationPage from '@/components/PaginationPage.vue';
 
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const seeDetails = (id: number) => {
+  router.push(`/dashboard/orders/${id}`);
+};
 const loadingInProgress = ref(false);
 const loadingFinished = ref(false);
 const ordersInProgress = ref<Order[]>([]);
@@ -61,7 +67,7 @@ onMounted(() => {
         <h2>Pedidos Ativos</h2>
         <div v-if="loadingInProgress" class="loading">Carregando...</div>
         <div v-else class="flex-cont">
-          <OrderCard v-for="order in ordersInProgress" :key="order.id" :order="order" class="col-lg-4 col-md-6 mb-4"/>
+          <OrderCard v-for="order in ordersInProgress" :key="order.id" :order="order" :seeDetails="seeDetails" class="col-lg-4 col-md-6 mb-4"/>
         </div>
       </div>
     </div>
@@ -71,7 +77,7 @@ onMounted(() => {
         <h2>Histórico de Pedidos</h2>
         <div v-if="loadingFinished" class="loading">Carregando...</div>
         <div v-else  class="flex-cont">
-          <OrderCard v-for="order in ordersFinished" :key="order.id" :order="order" />
+          <OrderCard v-for="order in ordersFinished" :key="order.id" :order="order" :seeDetails="seeDetails"/>
         </div>
         <PaginationPage :currentPage="currentPage" :totalPages="totalPages" :changePage="fetchOrders" />
       </div>

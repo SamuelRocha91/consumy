@@ -1,14 +1,10 @@
 <script setup lang="ts">
 import type { Order } from '../types/orderTypes';
-import { useRouter } from 'vue-router';
 
-const router = useRouter();
-const seeDetails = (id: number) => {
-  router.push(`/dashboard/orders/${id}`);
-};
 
 defineProps<{
   order: Order,
+  seeDetails: (id: number) => void,
 }>();
 </script>
 <template>
@@ -24,3 +20,9 @@ defineProps<{
     </div>
   </div>
 </template>
+
+<style>
+.card-link {
+  cursor: pointer;
+}
+</style>
