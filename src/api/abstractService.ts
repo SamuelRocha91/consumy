@@ -81,6 +81,23 @@ abstract class BaseService {
     return response;
   }
 
+  protected async getEntity(path: string): Promise<Response> {
+    const token = this.getFallback('token');
+    const response = await fetch(`${this.apiUrl}/${path}`,
+      {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'X-API-KEY': BaseService.X_API_KEY
+
+        }
+      }
+    );
+    return response;
+  }
+
   protected success(
     response: Response,
     onSuccess: (data: any) => void,
