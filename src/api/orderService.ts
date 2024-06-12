@@ -98,11 +98,22 @@ class OrderService extends BaseService{
     }
   }
 
-  async getOrderById(orderId: number, success: (data: any) => void) {
-    const response = await this.getEntity(`buyers/orders/${orderId}`);
+  async getOrderById(orderId: number, success: (data: any) => void, page=1) {
+    const response = await this.getEntity(`buyers/orders/${orderId}?locale=pt-BR`);
     if (response.ok) {
       const data = await response.json();
       success(data);
+    } else if (response.status === 401) {
+      await this.refreshToken();
+      const newResponse = await this.getAll(`buyers/orders?page=${page}`);
+      if (newResponse.ok) {
+        const data = await newResponse.json();
+        success(data);
+      } else {
+        this.auth.signOut();
+      }
+    } else {
+      this.failure(response, () => {});
     }
   }
 

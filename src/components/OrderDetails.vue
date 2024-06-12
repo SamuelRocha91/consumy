@@ -14,6 +14,7 @@ const isCancelable = (status: string) => {
 };
 </script>
 <template>
+  <div class="container d-flex justify-content-center align-items-center vh-100 mt-3">
   <div class="card">
     <div class="card-header">
       <h1>Pedido {{ order.id }}</h1>
@@ -22,21 +23,21 @@ const isCancelable = (status: string) => {
       <p class="status-content">Status: {{ order.status }}</p>
       <div v-for="(data, index) in order.items" :key="index" class="order-item">
         <div class="product-info">
-          <p>Produto: {{ data.product }}</p>
-          <p>Quantidade: {{ data.amount }}</p>
-          <p>Preço: {{ data.price }}</p>
+          <p><strong>Produto:</strong> {{ data.product }}</p>
+          <p><strong>Quantidade:</strong> {{ data.amount }}</p>
+          <p><strong>Preço:</strong> {{ data.price }}</p>
         </div>
         <hr class="divider">
       </div>
     </div>
     <div class="total-section">
-      <p class="total" >Total: R${{ order.total }}</p>
+      <p class="total" >Total: {{ order.total }}</p>
     </div>
     <div class="card-footer d-flex justify-content-end">
       <button @click="sendToOrderPage" class="btn btn-primary">Retornar para página de pedidos</button>
       <button v-if="isCancelable(order.status)" @click="cancelOrder(order.id)" class="btn btn-danger">Recusar</button>
     </div>
-
+  </div>
   </div>
 </template>
 
