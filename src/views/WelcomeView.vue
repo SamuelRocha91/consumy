@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CookieBanner from '@/components/CookieBanner.vue';
 import { useRouter } from 'vue-router';
 const route = useRouter();
 
@@ -8,6 +9,7 @@ const handleClick = () => {
 </script>
 
 <template>
+  <CookieBanner />
   <main class="main-content">
     <div class="d-flex h-100 flex-column justify-content-center text-light">
       <div class="bg-dark h-40 d-flex flex-column p-3 justify-content-center">
