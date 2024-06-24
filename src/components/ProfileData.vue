@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { createStorage } from '@/utils/storage';
 
 const address = ref('');
 const cep = ref('');
@@ -10,25 +9,13 @@ const name = ref('');
 const neighborhood = ref('');
 const numberAddress = ref('');
 const state = ref('');
-const storage = createStorage(true);
 
 defineProps<{
     handleClick: (param?: string) => void;
 }>();
 
 onMounted(() => {
-  const localBuyer = storage.get('buyer') || '[]';
-  const parsedBuyer = JSON.parse(localBuyer);
-  if (parsedBuyer) {
-    email.value = parsedBuyer.email;
-    name.value = parsedBuyer.name;
-    cep.value = parsedBuyer.cep;
-    state.value = parsedBuyer.state;
-    city.value = parsedBuyer.city;
-    address.value = parsedBuyer.address;
-    neighborhood.value = parsedBuyer.neighborhood;
-    numberAddress.value = parsedBuyer.numberAddress;
-  }
+ 
 });
 </script>
 <template>

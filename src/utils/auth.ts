@@ -111,6 +111,35 @@ class Auth {
     });
   }
 
+  async updateAddress(
+    id: number,
+    address: any,
+    onSuccess: () => void,
+    onFailure: () => void
+  ) {
+    const body = {
+      user: {
+        address_attributes: address
+      }
+    };
+    fetch(`${Auth.URL}/registrations/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.getFallback('token')}`,
+        'X-API-KEY': Auth.X_API_KEY
+      },
+      body: JSON.stringify(body)
+    }).then((response) => {
+      if (response.ok) {
+        this.success(response, onSuccess);
+      } else {
+        this.failure(response, onFailure);
+      }
+    }
+    );
+  }
   async refreshTokens(refresh_token: string) {
     const response = await fetch(`${Auth.URL}/refresh`, {
       method: 'POST',
