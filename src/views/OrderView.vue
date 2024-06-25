@@ -67,7 +67,18 @@ onMounted(() => {
         <h2>Pedidos Ativos</h2>
         <div v-if="loadingInProgress" class="loading">Carregando...</div>
         <div v-else class="flex-cont">
-          <OrderCard v-for="order in ordersInProgress" :key="order.id" :order="order" :seeDetails="seeDetails" class="col-lg-4 col-md-6 mb-4"/>
+          <OrderCard 
+           v-for="order in ordersInProgress"
+           :key="order.id" 
+           :order="order" 
+           :seeDetails="seeDetails" 
+           class="col-lg-4 col-md-6 mb-4"
+          />
+          <div class="not-orders" v-if="ordersInProgress.length == 0">
+            <h1>
+              Você não possui pedidos ativos no momento.
+            </h1>
+          </div>
         </div>
       </div>
     </div>
@@ -77,9 +88,18 @@ onMounted(() => {
         <h2>Histórico de Pedidos</h2>
         <div v-if="loadingFinished" class="loading">Carregando...</div>
         <div v-else  class="flex-cont">
-          <OrderCard v-for="order in ordersFinished" :key="order.id" :order="order" :seeDetails="seeDetails"/>
+          <OrderCard 
+            v-for="order in ordersFinished" 
+            :key="order.id"
+            :order="order" 
+            :seeDetails="seeDetails"
+           />
         </div>
-        <PaginationPage :currentPage="currentPage" :totalPages="totalPages" :changePage="fetchOrders" />
+        <PaginationPage
+         :currentPage="currentPage" 
+         :totalPages="totalPages" 
+         :changePage="fetchOrders" 
+        />
       </div>
     </div>
   </div>
@@ -89,5 +109,19 @@ onMounted(() => {
 .flex-cont {
   display: flex;
   flex-wrap: wrap;
+}
+
+.not-orders {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  border: 1px solid #ccc;
+  padding: 20px;
+  box-shadow: 1px 1px 5px #ccc;
+}
+
+.not-orders h1 {
+  font-size: 20px;
 }
 </style>
