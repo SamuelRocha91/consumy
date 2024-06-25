@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { createStorage } from '@/utils/storage';
 import { Auth } from '@/utils/auth';
 
 const { handleClick } = defineProps<{
@@ -19,7 +18,6 @@ const numberAddress = ref('');
 const password = ref('');
 const password_confirmation = ref('');
 const state = ref('');
-const storage = createStorage(true);
 
 const cepError = ref('');
 const nameError = ref('');
