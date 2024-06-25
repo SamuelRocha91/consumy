@@ -20,6 +20,11 @@ const searchQuery = defineModel('searchQuery', { default: '' });
 const selectedCategory = defineModel('selectedCategory', { default: '' });
 const router = useRouter();
 const route = useRoute();
+
+const returnToStores = () => {
+  router.push('/dashboard/stores');
+};
+
 const searchProducts = (id: number) => {
   router.push(`/dashboard/stores/${id}`);
 };
@@ -61,6 +66,9 @@ const searchProducts = (id: number) => {
            :value="category" :key="index">{{ category }}</option>
         </select>
       </div>
+      <div v-if="route.path !== '/dashboard/stores'" class="d-flex justify-content-center w-100">
+        <button class="btn btn-primary" @click.prevent="returnToStores">Voltar para lojas</button>
+      </div>
     </div>
   </div>
       <div class="container">
@@ -83,8 +91,8 @@ const searchProducts = (id: number) => {
                     <option v-for="n in 9" :value="n" :key="n">{{ n }}</option>
                   </select>
                 </p>
-                <p v-if="route.path == '/dashboard/stores'" class="card-text">
-                  <strong>Distância:</strong>2 km
+                <p v-if="route.path == '/dashboard/stores' && data.distance" class="card-text">
+                  <strong>Distância: </strong>{{ data.distance }}km
                 </p>
                 <div class="mt-auto">
                   <a v-if="route.path == '/dashboard/stores'" @click="searchProducts(data.id)" class="btn btn-primary">
@@ -101,7 +109,7 @@ const searchProducts = (id: number) => {
             </div>
           </div>
         </div>
-    <nav>
+        <nav>
             <ul class="pagination justify-content-end">
               <li class="page-item" :class="{ disabled: current === 1 }">
                 <a class="page-link" href="#" @click.prevent="handlePage(previous)">

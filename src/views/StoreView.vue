@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import NavBar from '@/components/NavBar.vue';
 import ListingStores from '@/components/ListingEntity.vue';
 import { onMounted, ref } from 'vue';
 import { StoreService } from '@/api/storeService';
@@ -8,17 +7,19 @@ import { useSharedRefs } from '@/utils/useSharedRefs';
 import { createStorage } from '@/utils/storage';
 import Swal from 'sweetalert2';
 import type { dataStoreRequest, storeRequest } from '@/types/storeTypes';
+import { Auth } from '@/utils/auth';
 
+const auth = new Auth();
+const current = ref(0);
+const next = ref(0);
+const previous = ref(0);
+const pages = ref(0);
 const quantity = useSharedRefs().quantity;
 const searchQuery = defineModel('searchQuery', { default: '' });
 const selectedCategory = defineModel('selectedCategory', { default: '' });
 const storeService = new StoreService();
 const stores = ref<storeRequest[]>([]);
 const storage = createStorage(true);
-const current = ref(0);
-const next = ref(0);
-const previous = ref(0);
-const pages = ref(0);
 
 const changePage = (page: number) => {
   if (page > 0 && page <= pages.value) {
@@ -26,14 +27,11 @@ const changePage = (page: number) => {
   }
 };
 
-const filteredStores = () => {
-  getlist(1, searchQuery.value.toLocaleLowerCase(), selectedCategory.value);
-};
-
-const getlist = (page: number, search = '', category = '') => {
+const fetchStores = (page: number, search = '', category = '', withToken = true) => {
   storeService.getStores(
     page,
     (data: dataStoreRequest) => {
+      console.log('Request succeeded with JSON response', data);
       stores.value = data.result.stores.map((store: any) => ({
         ...store,
         src: store.avatar_url,
@@ -48,11 +46,24 @@ const getlist = (page: number, search = '', category = '') => {
       Swal.fire('Falha ao tentar carregar as lojas. Tente novamente');
     },
     search,
-    category
+    category,
+    withToken
   );
 };
 
+const filteredStores = () => {
+  getlist(1, searchQuery.value.toLocaleLowerCase(), selectedCategory.value);
+};
+
 const debouncedSearch = debounce(filteredStores, 300);
+
+const getlist = (page: number, search = '', category = '') => {
+  if (auth.currentUser()) {
+    fetchStores(page, search, category);
+  } else {
+    fetchStores(page, search, category, false);
+  }
+};
 
 onMounted(() => {
   const data = storage.get('cart') || '[]';
@@ -65,7 +76,6 @@ onMounted(() => {
 });
 </script>
 <template>
-  <NavBar :quantity="quantity"/>
   <ListingStores
    v-if="stores" 
    :entity="stores"

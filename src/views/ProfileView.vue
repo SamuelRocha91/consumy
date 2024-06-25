@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import NavBar from '@/components/NavBar.vue';
 import ProfileData from '@/components/ProfileData.vue';
 import FormProfile from '@/components/FormProfile.vue';
 import { useSharedRefs } from '@/utils/useSharedRefs';
@@ -30,7 +29,6 @@ onMounted(() => {
 });
 </script>
 <template>
-  <NavBar :quantity="quantity"/>
   <FormProfile 
   :handleClick="managerPages"
    v-if="isEdit" :isFormPassword="isFormPassword"

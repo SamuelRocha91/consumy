@@ -30,5 +30,6 @@ export type productType = {
     address: string,
     category: string
     inCart?: boolean,
-    quantity?: number
+    quantity?: number,
+    storeId?: number
 }

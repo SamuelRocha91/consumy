@@ -13,15 +13,29 @@ class StoreService extends BaseService{
     onFailure: (data: any) => void,
     searchQuery = '',
     category = '',
+    auth = true,
   ) {
+    let response: Response;
+
     if (searchQuery == "Todos") {
       searchQuery = '';
     }
-    const response = await this
-      .getAll(
-        `stores?page=${page}&name=${searchQuery}&category=${category}`
-      );
+    if (auth) {
+      response = await this
+        .getAll(
+          `stores?page=${page}&name=${searchQuery}&category=${category}`
+        );
+    } else {
+      console.log('corretossss');
+      response = await this
+        .getAllWithinToken(
+          `stores/listing?page=${page}&name=${searchQuery}&category=${category}`
+        );
+    }
+    
     if (response.ok) {
+      console.log('aqui2');
+
       this.success(response, onSuccess);
     } else if (response.status === 401) {
       await this.refreshToken();
@@ -40,25 +54,6 @@ class StoreService extends BaseService{
     }
   }
   
-
-  failure(response: Response, onFailure: (data: any) => void) {
-    response.json().then((erro: any) => onFailure(erro));
-  }
-
-  success(
-    response: Response,
-    onSuccess: (data: dataStoreRequest) => void,
-  ) {
-    response.json().then((json) => {
-      onSuccess(json);
-    });
-  }
-
-  private async refreshToken() {
-    const refresh_token = this.storage.get('refresh_token') || '[]';
-    const parseRefresh = refresh_token;
-    await this.auth.refreshTokens(parseRefresh);
-  }
 }
 
 export { StoreService };

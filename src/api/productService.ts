@@ -14,16 +14,27 @@ class ProductService extends BaseService{
     page: number,
     searchQuery = '',
     category = '',
+    auth = true,
   ) {
+    let response: Response;
   
     if (searchQuery == "Todos") {
       searchQuery = '';
     }
-    const response = await this
-      .getAll
-      (
-        `stores/${id}/products?page=\n${page}&name=${searchQuery}&category=${category}&locale=pt-BR`
-      );
+
+    if (auth) {
+      response = await this
+        .getAll
+        (
+          `stores/${id}/products?page=\n${page}&name=${searchQuery}&category=${category}&locale=pt-BR`
+        );
+    } else {
+      response = await this
+        .getAllWithinToken
+        (
+          `stores/${id}/products/listing?page=\n${page}&name=${searchQuery}&category=${category}&locale=pt-BR`
+        );
+    }
     
     if (response.ok) {
       this.success(response, onSuccess);
@@ -43,25 +54,7 @@ class ProductService extends BaseService{
       this.failure(response, onFailure);
     }
   }
-  
-  success(
-    response: Response,
-    onSuccess: (data: dataProductsRequest) => void,
-  ) {
-    response.json().then((json) => {
-      onSuccess(json);
-    });
-  }
-  
-  failure(response: Response, onFailure: (data: any) => void) {
-    response.json().then((json) => onFailure(json));
-  }  
 
-  private async refreshToken() {
-    const refresh_token = this.storage.get('refresh_token') || '[]';
-    const parseRefresh = refresh_token;
-    await this.auth.refreshTokens(parseRefresh);
-  }
 }
 
 export { ProductService };

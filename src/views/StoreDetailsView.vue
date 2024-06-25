@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import NavBar from '@/components/NavBar.vue';
 import ListingStores from '@/components/ListingEntity.vue';
 import { onMounted, ref } from 'vue';
 import debounce from 'lodash/debounce';
@@ -12,7 +11,9 @@ import {
   type dataProductsRequest,
   type productType
 } from '@/types/productTypes';
+import { Auth } from '@/utils/auth';
 
+const auth = new Auth();
 const cartIds = ref<number[]>([]);
 const current = ref(0);
 const next = ref(0);
@@ -35,10 +36,32 @@ const addProductsInCart = (id: number, selectQuantity: string) => {
     return;
   }
   const data = storage.get('cart') || '[]';
-  const dataParsed = JSON.parse(data);
+  let dataParsed = JSON.parse(data);
   const product = products.value.find((product: any) => product.id === id);
   const index = products.value.findIndex((product: any) => product.id === id);
-
+  if (dataParsed.some((prodct: any) => prodct.storeId != product?.storeId)) {
+    Swal.fire({
+      title: "Você já possui rango de outra loja no carrinho",
+      text: "Deseja esvaziar o carrinho e adicionar o novo item?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "É sim, correto e certo!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dataParsed = product;
+        storage.store('cart', JSON.stringify([dataParsed]));
+        cartIds.value = [id];
+        products.value[index].inCart = true;
+        quantity.value = Number(selectQuantity);
+        return;
+      } else {
+        return;
+      }
+    });
+    return;
+  }
   const newObjectCart = {
     ...product,
     storeId: storeId.value,
@@ -55,6 +78,38 @@ const changePage = (page: number) => {
   if (page > 0 && page <= pages.value) {
     getlist(page);
   }
+};
+
+const fetchProducts = (page: number, search = '', category = '', withToken = true) => {
+  const cart = localStorage.getItem('cart') || '[]';
+  const parseCart = JSON.parse(cart);
+  productsService.getProducts(
+    Number(storeId.value),
+    (data: dataProductsRequest) => {
+      products.value = data.result.products.map((product: any) => ({
+        ...product,
+        src: product.image_url,
+        name: product.title,
+        inCart: cartIds.value.some((id: number) => id == product.id),
+        quantity: parseCart.some((field: any) => field.id == product.id) ?
+          parseCart.find((field: any) => field.id == product.id).quantity
+          : 1,
+        storeId: product.store_id
+      }));
+      next.value = data.result.pagination.next || 1;
+      pages.value = data.result.pagination.pages;
+      current.value = data.result.pagination.current || 1;
+      previous.value = data.result.pagination.previous || 1;
+    },
+    (error: any) => {
+      console.error('Request failed:', error);
+      Swal.fire('Falha ao tentar carregar os produtos. Tente novamente');
+    },
+    page,
+    search,
+    category,
+    withToken
+  );
 };
 
 const removeProductsInCart = (id: number) => {
@@ -78,34 +133,11 @@ const filteredStores = () => {
 const debouncedSearch = debounce(filteredStores, 300);
 
 const getlist = (page: number, search = '', category = '') => {
-  const cart = localStorage.getItem('cart') || '[]';
-  const parseCart = JSON.parse(cart);
-  productsService.getProducts(
-    Number(storeId.value),
-    (data: dataProductsRequest) => {
-      console.log(data);
-      products.value = data.result.products.map((product: any) => ({
-        ...product,
-        src: product.image_url,
-        name: product.title,
-        inCart: cartIds.value.some((id: number) => id == product.id),
-        quantity: parseCart.some((field: any) => field.id == product.id) ?
-          parseCart.find((field: any) => field.id == product.id).quantity
-          : 1
-      }));
-      next.value = data.result.pagination.next || 1;
-      pages.value = data.result.pagination.pages;
-      current.value = data.result.pagination.current || 1;
-      previous.value = data.result.pagination.previous || 1;
-    },
-    (error: any) => {
-      console.error('Request failed:', error);
-      Swal.fire('Falha ao tentar carregar os produtos. Tente novamente');
-    },
-    page,
-    search,
-    category,
-  );
+  if (auth.currentUser()) {
+    fetchProducts(page, search, category);
+  } else {
+    fetchProducts(page, search, category, false);
+  }
 };
 
 onMounted(() => {
@@ -120,7 +152,6 @@ onMounted(() => {
 });
 </script>
 <template>
-  <NavBar :quantity="quantity"/>
   <ListingStores
    v-if="products" 
    :entity="products" 

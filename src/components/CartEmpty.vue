@@ -3,19 +3,19 @@ import { RouterLink } from 'vue-router';
 </script>
 
 <template>
-    <div class="empty-cart-message">
-          <i class="bi bi-cart-x"></i>
-          <h1>Você ainda não possui itens adicionados ao carrinho</h1>
-          <p>
-            Explore nossos produtos e adicione seus itens favoritos ao carrinho.
-          </p>
-          <RouterLink 
-          to="/dashboard/stores" 
-          class="btn btn-primary"
-          >
-          Ver Lojas
-        </RouterLink>
-    </div>
+  <div class="empty-cart-message">
+    <i class="bi bi-cart-x"></i>
+    <h1>Você ainda não possui itens adicionados ao carrinho</h1>
+    <p>
+      Explore nossos produtos e adicione seus itens favoritos ao carrinho.
+    </p>
+    <RouterLink 
+      to="/dashboard/stores" 
+      class="btn btn-primary"
+    >
+      Ver Lojas
+    </RouterLink>
+  </div>
 </template>
 
 <style scoped>
