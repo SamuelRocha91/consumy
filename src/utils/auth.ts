@@ -70,7 +70,6 @@ class Auth {
     );
   }
 
-
   async signIn(
     email: string,
     password: string,

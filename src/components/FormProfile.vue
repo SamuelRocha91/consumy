@@ -15,25 +15,16 @@ const email = defineModel<string>('email', { default: '' });
 const name = ref('');
 const neighborhood = ref('');
 const numberAddress = ref('');
-const password = ref('');
-const password_confirmation = ref('');
 const state = ref('');
 
 const cepError = ref('');
 const nameError = ref('');
-const emailError = ref('');
-const passwordConfirmationError = ref('');
-const passwordError = ref('');
 
 const handleCep = (event: Event) => {
   const value = (event.target as HTMLInputElement).value;
   cep.value = cepMask(value || '');
 };
 
-const handleEmail = (event: Event) => {
-  const value = (event.target as HTMLInputElement).value;
-  email.value = value;
-};
 
 const handleName = (event: Event) => {
   const value = (event.target as HTMLInputElement).value;
@@ -48,34 +39,6 @@ const handleNumberAddress = (event: Event) => {
   numberAddress.value = value;
 };
 
-const handlePassword = (event: Event) => {
-  const value = (event.target as HTMLInputElement).value;
-  password.value = value;
-};
-
-const handlePasswordConfirmation = (event: Event) => {
-  const value = (event.target as HTMLInputElement).value;
-  password_confirmation.value = value;
-};
-
-const validateEmailOnBlur = () => {
-  const re = /\S+@\S+\.\S+/;
-  re.test(email.value)
-    ? (emailError.value = '')
-    : (emailError.value = 'Insira um email válido');
-};
-
-const validatepasswordOnBlur = () => {
-  password.value.length < 6
-    ? (passwordError.value = 'Mínimo de 6 caracteres')
-    : (passwordError.value = '');
-};
-
-const validatepasswordConfirmationOnBlur = () => {
-  password_confirmation.value === password.value
-    ? (passwordConfirmationError.value = '')
-    : (passwordConfirmationError.value = 'Senhas não coincidem');
-};
 
 const validateCepOnBlur = () => {
   cep.value.length === 9 ?
@@ -110,10 +73,6 @@ const saveData = () => {
   });
 };
 
-const updatePassword = () => {
-  handleClick();
-};
-
 const searchCep = () => {
   const formatedCep = cep.value.replace('-', '');
   fetch(`https://viacep.com.br/ws/${formatedCep}/json/`)
@@ -144,7 +103,6 @@ onMounted(() => {
 });
 </script>
 <template>
-  <template v-if="!isFormPassword">
     <div class="container mt-5">
       <div class="card">
         <div class="card-header">
@@ -253,52 +211,7 @@ onMounted(() => {
         </form>
       </div>
     </div>
-  </div>
-    </template>
-    <template v-else>
-        <div class="card-body">
-            <form>
-                <div class="form-group">
-                    <label for="email">Digite seu email</label>
-                    <input type="email" 
-                    @blur="validateEmailOnBlur" @input="handleEmail"
-                     class="form-control" id="email" :value="email">
-                </div>
-                <div class="form-group">
-                    <label for="password">Senha</label>
-                    <input @blur="validatepasswordOnBlur" 
-                    @change="handlePassword" 
-                    type="password" class="form-control"
-                    id="password" :value="password">
-                </div>
-                <div class="form-group">
-                    <label for="password_confirmation">Repetir a senha</label>
-                    <input @input="handlePasswordConfirmation" 
-                    @blur="validatepasswordConfirmationOnBlur"
-                    type="password" class="form-control" 
-                    id="password_confirmation" :value="password_confirmation">
-                    <div class="div-error">
-                        <span v-if="passwordConfirmationError" class="error">
-                            {{ passwordConfirmationError }}
-                        </span>
-                    </div>
-                </div>
-                   <div class="form-group text-center">
-                   <button 
-                   type="button" class="btn btn-success mr-2" 
-                   @click.prevent="updatePassword">
-                   Salvar nova senha
-                  </button>
-                    <button 
-                    @click.prevent="handleClick()" 
-                    type="button"
-                     class="btn btn-danger">
-                     Cancelar
-                    </button>
-                </div>
-            </form>
-        </div>
-    </template>
+  </div>    
 </template>
 
 <style scoped>
