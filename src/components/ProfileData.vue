@@ -114,10 +114,7 @@ onMounted(() => {
                          >
                          Alterar
                             Dados</button>
-                        <button 
-                        @click.prevent="handleClick('password')" type="button" 
-                        class="btn btn-secondary">Alterar
-                            Senha</button>
+
                     </div>
                 </form>
             </div>
