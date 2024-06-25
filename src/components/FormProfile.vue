@@ -104,6 +104,7 @@ const saveData = () => {
 
   const userId = localStorage.getItem('userId') || '[]';
   const parsedUserId = JSON.parse(userId) || 0;
+  localStorage.setItem('name', JSON.stringify(name.value));
   auth.updateAddress(parsedUserId, addressArray, () => {
     handleClick();
   }, () => {

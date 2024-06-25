@@ -19,6 +19,9 @@ defineProps<{
 
 onMounted(() => {
   auth.fetchUser((data) => {
+    const nameStorage = localStorage.getItem('name') || '[]';
+    const nameParsed = JSON.parse(nameStorage);
+    name.value = nameParsed;
     address.value = data.address.street;
     cep.value = data.address.postal_code;
     city.value = data.address.city;
