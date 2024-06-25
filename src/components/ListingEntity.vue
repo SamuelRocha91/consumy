@@ -91,8 +91,8 @@ const searchProducts = (id: number) => {
                     <option v-for="n in 9" :value="n" :key="n">{{ n }}</option>
                   </select>
                 </p>
-                <p v-if="route.path == '/dashboard/stores'" class="card-text">
-                  <strong>Distância:</strong>2 km
+                <p v-if="route.path == '/dashboard/stores' && data.distance" class="card-text">
+                  <strong>Distância: </strong>{{ data.distance }}km
                 </p>
                 <div class="mt-auto">
                   <a v-if="route.path == '/dashboard/stores'" @click="searchProducts(data.id)" class="btn btn-primary">

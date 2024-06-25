@@ -31,6 +31,7 @@ const fetchStores = (page: number, search = '', category = '', withToken = true)
   storeService.getStores(
     page,
     (data: dataStoreRequest) => {
+      console.log('Request succeeded with JSON response', data);
       stores.value = data.result.stores.map((store: any) => ({
         ...store,
         src: store.avatar_url,
