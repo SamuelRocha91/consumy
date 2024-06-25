@@ -128,17 +128,21 @@ const searchCep = () => {
 };
 
 onMounted(() => {
-  const localBuyer = storage.get('buyer') || '[]';
-  const parsedBuyer = JSON.parse(localBuyer);
-  if (parsedBuyer) {
-    name.value = parsedBuyer.name;
-    cep.value = parsedBuyer.cep;
-    state.value = parsedBuyer.state;
-    city.value = parsedBuyer.city;
-    address.value = parsedBuyer.address;
-    neighborhood.value = parsedBuyer.neighborhood;
-    numberAddress.value = parsedBuyer.numberAddress;
-  }
+  auth.fetchUser((data) => {
+    const nameStorage = localStorage.getItem('name') || '[]';
+    const nameParsed = JSON.parse(nameStorage);
+    name.value = nameParsed;
+    address.value = data.address.street;
+    cep.value = data.address.postal_code;
+    city.value = data.address.city;
+    email.value = data.email;
+    state.value = data.address.state;
+    numberAddress.value = data.address.number;
+    neighborhood.value = data.address.neighborhood;
+    localStorage.setItem('userId', JSON.stringify(data.id));
+  }, () => {
+    console.log('Error fetching user data');
+  });
 });
 </script>
 <template>
