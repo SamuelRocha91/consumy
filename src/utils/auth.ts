@@ -51,6 +51,26 @@ class Auth {
     andThen();
   }
 
+  async fetchUser(onSuccess: (data: any) => void, onFailure: () => void) {
+    fetch(`${Auth.URL}/me`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.getFallback('token')}`,
+        'X-API-KEY': Auth.X_API_KEY
+      }
+    }).then((response) => {
+      if (response.ok) {
+        response.json().then(onSuccess);
+      } else {
+        this.signOut(onFailure);
+      }
+    }
+    );
+  }
+
+
   async signIn(
     email: string,
     password: string,
@@ -133,7 +153,7 @@ class Auth {
       body: JSON.stringify(body)
     }).then((response) => {
       if (response.ok) {
-        this.success(response, onSuccess);
+        response.json().then(onSuccess);
       } else {
         this.failure(response, onFailure);
       }

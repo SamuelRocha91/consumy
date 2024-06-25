@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { createStorage } from '@/utils/storage';
+import { Auth } from '@/utils/auth';
 
 const { handleClick } = defineProps<{
     handleClick: (param?: string) => void;
@@ -8,6 +9,7 @@ const { handleClick } = defineProps<{
 }>();
 
 const address = ref('');
+const auth = new Auth();
 const cep = ref('');
 const city = ref('');
 const email = defineModel<string>('email', { default: '' });
@@ -91,22 +93,22 @@ const cepMask = (value: string) => {
 };
 
 const saveData = () => {
-  const localBuyer = storage.get('buyer') || '[]';
-  const parsedBuyer = JSON.parse(localBuyer);
-  if (parsedBuyer) {
-    const buyer = {
-      name: name.value,
-      email: parsedBuyer.email,
-      address: address.value,
-      city: city.value,
-      state: state.value,
-      neighborhood: neighborhood.value,
-      numberAddress: numberAddress.value,
-      cep: cep.value,
-    };
-    storage.store('buyer', JSON.stringify(buyer));
+  const addressArray = {
+    street: address.value,
+    number: numberAddress.value,
+    neighborhood: neighborhood.value,
+    city: city.value,
+    state: state.value,
+    postal_code: cep.value,
   };
-  handleClick();
+
+  const userId = localStorage.getItem('userId') || '[]';
+  const parsedUserId = JSON.parse(userId) || 0;
+  auth.updateAddress(parsedUserId, addressArray, () => {
+    handleClick();
+  }, () => {
+    console.log('Erro ao atualizar perfil');
+  });
 };
 
 const updatePassword = () => {

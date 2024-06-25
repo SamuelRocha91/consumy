@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
+import { Auth } from '@/utils/auth';
+
+const auth = new Auth();
 
 const address = ref('');
 const cep = ref('');
@@ -15,7 +18,18 @@ defineProps<{
 }>();
 
 onMounted(() => {
- 
+  auth.fetchUser((data) => {
+    address.value = data.address.street;
+    cep.value = data.address.postal_code;
+    city.value = data.address.city;
+    email.value = data.email;
+    state.value = data.address.state;
+    numberAddress.value = data.address.number;
+    neighborhood.value = data.address.neighborhood;
+    localStorage.setItem('userId', JSON.stringify(data.id));
+  }, () => {
+    console.log('Error fetching user data');
+  });
 });
 </script>
 <template>
