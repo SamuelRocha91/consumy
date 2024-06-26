@@ -1,5 +1,6 @@
 <script setup lang="ts">
-defineProps<{
+import ChatComponent from './ChatComponent.vue';
+const { order } = defineProps<{
   order: any,
   cancelOrder: (id: number) => void,
   sendToOrderPage: () => void,
@@ -37,6 +38,7 @@ const isCancelable = (status: string) => {
       <button @click="sendToOrderPage" class="btn btn-primary">Retornar para página de pedidos</button>
       <button v-if="isCancelable(order.status)" @click="cancelOrder(order.id)" class="btn btn-danger">Recusar</button>
     </div>
+    <ChatComponent v-if="order.id" :id="order.id"  class="chat-component" />
   </div>
   </div>
 </template>
@@ -74,4 +76,13 @@ const isCancelable = (status: string) => {
   font-weight: bold;
   margin-bottom: 20px;
 }
+
+.chat-component {
+  position: fixed;
+  bottom: 0;
+  background-color: rgb(216, 197, 197);
+  max-width: 20%;
+  box-shadow: 0px 0px 10px 0px #000000;
+}
+
 </style>
