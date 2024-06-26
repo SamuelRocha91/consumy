@@ -1,27 +1,30 @@
 <script setup lang="ts"> 
 import { onBeforeMount, onMounted, ref } from 'vue';
-import consumer from '../../utils/cable'; 
+import consumer from '../utils/cable'; 
+import { Auth } from '@/utils/auth';
+
+const auth = new Auth();
+const currentUser = ref(auth.currentUser());
+
+const { id } = defineProps<{ id: number }>();
+
 let subscription: any;
 
 const messages = ref<any[]>([]);
 const newMessage = defineModel('newMessage', {default: ''});
 const sendMessage = () => {
   if (newMessage.value.trim() === '') return;
-  subscription.perform('speak', { message: newMessage.value });
+  subscription.perform('speak', { message: newMessage.value, email: currentUser.value?.email });
   newMessage.value = '';
 };
 
 const visible = ref(false);
-
-const { orderId } = defineProps<({
-  orderId: string;
-})>();
-
   
 onMounted(() => {
+
   subscription = consumer.subscriptions.create(
 
-    { channel: 'ChatChannel', order_id: orderId },
+    { channel: 'ChatChannel', order_id: id},
     {
 
       connected: (): void => {

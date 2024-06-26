@@ -25,11 +25,13 @@ const id = Number($route.params.id);
 onMounted(() => {
   orderService.getOrderById(id, (data: any) => {
     order.value = data;
+    localStorage.setItem('orderID', JSON.stringify(data.id));
   });
 });
 </script>
 <template>
     <OrderDetails
+     v-if="order"
      :order="order" 
      :cancelOrder="cancelOrder"
      :sendToOrderPage="sendToOrderPage"
