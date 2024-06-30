@@ -1,4 +1,7 @@
 <script setup lang="ts">
+defineProps<{
+  orders?: any,
+}>();
 </script>
 <template>
   <div class="container">
@@ -12,51 +15,33 @@
     <div class="row mt-5">
       <div class="col-md-12">
         <h2>Últimos pedidos</h2>
-        <div class="card-deck">
-          <div class="card">
+        <div class="card-deck" v-if="orders">
+          <div class="card" v-for="order in orders" :key="order.id">
             <div class="card-body">
               <h5 class="card-title">Pedido 1</h5>
               <p class="card-text">Descrição do pedido 1.</p>
             </div>
           </div>
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Pedido 2</h5>
-              <p class="card-text">Descrição do pedido 2.</p>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Pedido 3</h5>
-              <p class="card-text">Descrição do pedido 3.</p>
-            </div>
-          </div>
         </div>
-      </div>
+       <div v-else>
+        <p>Não há pedidos recentes.</p>
+       </div>
+     </div> 
     </div>
 
     <div class="row mt-5">
       <div class="col-md-12">
         <h2>Lojas recentes</h2>
-        <div class="card-deck">
+        <div class="card-deck" v-if="orders" >
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Loja 1</h5>
               <p class="card-text">Descrição da loja 1.</p>
             </div>
           </div>
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Loja 2</h5>
-              <p class="card-text">Descrição da loja 2.</p>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Loja 3</h5>
-              <p class="card-text">Descrição da loja 3.</p>
-            </div>
-          </div>
+        </div>
+        <div v-else>
+          <p>Não há lojas recentes.</p>
         </div>
       </div>
     </div>
