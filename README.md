@@ -2,7 +2,7 @@
 
 Este repositório representa a aplicação do consumidor, desenvolvida em Vue.js, para uma plataforma de delivery. Esta aplicação permite que os usuários naveguem, selecionem e comprem produtos de diversas lojas.
 
-[![Em desenvolvimento](https://img.shields.io/badge/Status-Em%20desenvolvimento-yellow)](https://github.com/SamuelRocha91/consumy)
+![Ilustração uso da consumy](./assets/consumy.gif)
 
 ## Repositórios Relacionados
 
@@ -28,7 +28,11 @@ Este projeto aborda e utiliza os seguintes conceitos e dependências:
 
 ## Setup do Projeto
 
-Para configurar e executar o projeto localmente, siga os passos abaixo:
+Para um uso integrado, observe o passo a passo em:
+
+- [Delivery Backend](https://github.com/SamuelRocha91/delivery_back) - Aplicação backend em Rails para a plataforma de delivery
+
+Para configurar e executar o repositório individualmente, siga os passos abaixo:
 
 ### Pré-requisitos
 
