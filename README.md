@@ -1,5 +1,16 @@
 # Projeto do Consumidor - Aplicação de Delivery
 
+
+<h2>🌐</h2>
+<ul>
+  <li><a href="https://github.com/SamuelRocha91/consumy" target="_blank">Português</a></li>
+  <li><a href="https://github.com/SamuelRocha91/consumy/blob/main/README_es.md" target="_blank">Español</a></li>
+  <li><a href="https://github.com/SamuelRocha91/consumy/blob/main/README_en.md" target="_blank">English</a></li>
+  <li><a href="https://github.com/SamuelRocha91/consumy/blob/main/README_ru.md" target="_blank">Русский</a></li>
+  <li><a href="https://github.com/SamuelRocha91/consumy/blob/main/README_ch.md" target="_blank">中文</a></li>
+  <li><a href="https://github.com/SamuelRocha91/consumy/blob/main/README_ar.md" target="_blank">العربية</a></li>
+</ul>
+
 Este repositório representa a aplicação do consumidor, desenvolvida em Vue.js, para uma plataforma de delivery. Esta aplicação permite que os usuários naveguem, selecionem e comprem produtos de diversas lojas.
 
 ![Ilustração uso da consumy](./assets/consumy.gif)
