@@ -1,14 +1,6 @@
-# Consumer Project - Delivery Application
+# <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTchGHKMA3VyA1ySh2ITWb0CIm_cnhF1cGvlQ&s" alt="Full Stack Projects" width="52" height="40" /> Consumer Project - Delivery Application <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTchGHKMA3VyA1ySh2ITWb0CIm_cnhF1cGvlQ&s" alt="Java Projects Logo" width="52" height="40" /> 
 
-<h2>🌐</h2>
-<ul>
-  <li><a href="https://github.com/SamuelRocha91/consumy" target="_blank">Português</a></li>
-  <li><a href="https://github.com/SamuelRocha91/consumy/blob/main/README_es.md" target="_blank">Español</a></li>
-  <li><a href="https://github.com/SamuelRocha91/consumy/blob/main/README_en.md" target="_blank">English</a></li>
-  <li><a href="https://github.com/SamuelRocha91/consumy/blob/main/README_ru.md" target="_blank">Русский</a></li>
-  <li><a href="https://github.com/SamuelRocha91/consumy/blob/main/README_ch.md" target="_blank">中文</a></li>
-  <li><a href="https://github.com/SamuelRocha91/consumy/blob/main/README_ar.md" target="_blank">العربية</a></li>
-</ul>
+## 🌐 [![Português](https://img.shields.io/badge/Português-green)](https://github.com/SamuelRocha91/consumy/blob/main/README.md) [![Español](https://img.shields.io/badge/Español-yellow)](https://github.com/SamuelRocha91/consumy/blob/main/README_es.md) [![English](https://img.shields.io/badge/English-blue)](https://github.com/SamuelRocha91/consumy/blob/main/README_en.md) [![Русский](https://img.shields.io/badge/Русский-lightgrey)](https://github.com/SamuelRocha91/consumy/blob/main/README_ru.md) [![中文](https://img.shields.io/badge/中文-red)](https://github.com/SamuelRocha91/consumy/blob/main/README_ch.md) [![العربية](https://img.shields.io/badge/العربية-orange)](https://github.com/SamuelRocha91/consumy/blob/main/README_ar.md)
 
 This repository represents the consumer application, developed in Vue.js, for a delivery platform. This application allows users to browse, select, and purchase products from various stores.
 
@@ -39,7 +31,9 @@ This project covers and uses the following concepts and dependencies:
 
 For integrated usage, refer to:
 
-- [Delivery Backend](https://github.com/SamuelRocha91/delivery_back) - Backend application in Rails for the delivery platform
+- 💎 [Delivery Backend](https://github.com/SamuelRocha91/delivery_back) - Backend application in Rails for the delivery platform
+- 👨‍💼 [Seller Application](https://github.com/SamuelRocha91/seller_application);
+- 💲 [Paymenty API](https://github.com/SamuelRocha91/paymenty);
 
 To set up and run the repository individually, follow these steps:
 
@@ -85,8 +79,7 @@ To run unit tests:
 npm run test:unit
 ```
 
----
+## Other Projects
 
-This project was created as a requirement for the Quero Ser Dev 9th edition program from LWSA.
-
----
+- 📏 [React Precision Application](https://github.com/SamuelRocha91/precisionReactApplication/blob/main/README_en.md) - Interface for registering gas and water measurements
+- 🤖 [Node API](https://github.com/SamuelRocha91/apiMeasureWaterAndGas/blob/main/README_en.md) - API for measuring and registering consumption of water and gas
