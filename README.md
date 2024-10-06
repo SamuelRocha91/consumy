@@ -1,19 +1,24 @@
-# <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTchGHKMA3VyA1ySh2ITWb0CIm_cnhF1cGvlQ&s" alt="Full Stack Projects" width="52" height="40" /> Projeto do Consumidor - Aplicação de Delivery <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTchGHKMA3VyA1ySh2ITWb0CIm_cnhF1cGvlQ&s" alt="Java Projects Logo" width="52" height="40" />
+# <img src="https://cdn-icons-png.flaticon.com/128/83/83522.png" alt="Java Projects Logo" width="42" height="30" /> Projeto do Consumidor - Aplicação de Delivery <img src="https://cdn-icons-png.flaticon.com/128/83/83522.png" alt="Java Projects Logo" width="42" height="30" />
 
+## 🌐 Idiomas Disponíveis
 
-## 🌐 [![Português](https://img.shields.io/badge/Português-green)](https://github.com/SamuelRocha91/consumy/blob/main/README.md) [![Español](https://img.shields.io/badge/Español-yellow)](https://github.com/SamuelRocha91/consumy/blob/main/README_es.md) [![English](https://img.shields.io/badge/English-blue)](https://github.com/SamuelRocha91/consumy/blob/main/README_en.md) [![Русский](https://img.shields.io/badge/Русский-lightgrey)](https://github.com/SamuelRocha91/consumy/blob/main/README_ru.md) [![中文](https://img.shields.io/badge/中文-red)](https://github.com/SamuelRocha91/consumy/blob/main/README_ch.md) [![العربية](https://img.shields.io/badge/العربية-orange)](https://github.com/SamuelRocha91/consumy/blob/main/README_ar.md)
+[![Português](https://img.shields.io/badge/Português-green)](https://github.com/SamuelRocha91/consumy/blob/main/README.md) [![Español](https://img.shields.io/badge/Español-yellow)](https://github.com/SamuelRocha91/consumy/blob/main/README_es.md) [![English](https://img.shields.io/badge/English-blue)](https://github.com/SamuelRocha91/consumy/blob/main/README_en.md) [![Русский](https://img.shields.io/badge/Русский-lightgrey)](https://github.com/SamuelRocha91/consumy/blob/main/README_ru.md) [![中文](https://img.shields.io/badge/中文-red)](https://github.com/SamuelRocha91/consumy/blob/main/README_ch.md) [![العربية](https://img.shields.io/badge/العربية-orange)](https://github.com/SamuelRocha91/consumy/blob/main/README_ar.md)
 
 Este repositório representa a aplicação do consumidor, desenvolvida em Vue.js, para uma plataforma de delivery. Esta aplicação permite que os usuários naveguem, selecionem e comprem produtos de diversas lojas.
 
 ![Ilustração uso da consumy](./assets/consumy.gif)
 
-## Repositórios Relacionados
+<details>
+  <summary><h2>🔗 Repositórios Relacionados</h2></summary>
 
-- 💎 [Delivery Backend](https://github.com/SamuelRocha91/delivery_back) - Aplicação backend em Rails para a plataforma de delivery
-- 👨‍💼 [Seller Application](https://github.com/SamuelRocha91/seller_application) - Aplicação do vendedor
-- 💲 [Paymenty API](https://github.com/SamuelRocha91/paymenty)
-- 
-### Conceitos e Dependências Utilizadas
+  - 💎 [Delivery Backend](https://github.com/SamuelRocha91/delivery_back) - Aplicação backend em Rails para a plataforma de delivery
+  - 👨‍💼 [Seller Application](https://github.com/SamuelRocha91/seller_application) - Aplicação do vendedor
+  - 💲 [Paymenty API](https://github.com/SamuelRocha91/paymenty) - API de pagamento
+
+</details>
+
+<details>
+  <summary> <h2>Conceitos e Dependências Utilizadas </h2></summary>
 
 Este projeto aborda e utiliza os seguintes conceitos e dependências:
 
@@ -29,8 +34,10 @@ Este projeto aborda e utiliza os seguintes conceitos e dependências:
 - **dotenv e dotenv-webpack:** Gerenciamento de variáveis de ambiente.
 - **Manipulação de Eventos com @microsoft/fetch-event-source:** Utilizado para gerenciar eventos enviados pelo servidor.
 
+</details>
 
-## Setup do Projeto
+<details>
+  <summary><h2>🛠️ Setup do Projeto</h2></summary>
 
 Para um uso integrado, observe o passo a passo em:
 
@@ -79,7 +86,13 @@ Para executar os testes unitários:
 ```sh
 npm run test:unit
 ```
-## Outros projetos:
 
-- 📏 [React Precision Application](https://github.com/SamuelRocha91/precisionReactApplication) - Interface de cadastro de medições de gás e de água
-- 🤖 [Node API](https://github.com/SamuelRocha91/apiMeasureWaterAndGas) - Api de medição e cadastro de consumo
+</details>
+
+<details>
+  <summary><h2>📂 Outros Projetos</h2></summary>
+
+  - 📏 [React Precision Application](https://github.com/SamuelRocha91/precisionReactApplication) - Interface de cadastro de medições de gás e de água
+  - 🤖 [Node API](https://github.com/SamuelRocha91/apiMeasureWaterAndGas) - API de medição e cadastro de consumo
+
+</details>
